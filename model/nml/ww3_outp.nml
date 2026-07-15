@@ -8,11 +8,12 @@
 ! POINT
 ! * namelist must be terminated with /
 ! * definitions & defaults:
-! 	POINT%TIMESTART		= '19000101 000000' ! Start time for the output(yyyymmdd hhmmss)
-! 	POINT%TIMESTRIDE 	= '0'		        ! Time stride, increment of output (s)
-! 	POINT%TIMECOUNT		= '1000000'	        ! Number of output times 
-!   POINT%SAMEFILE		= 0		            ! Split output into multiple files for each time step or one file (0=one file, 1=separate files)
-!   POINT%PREFIX        = 'wave'	        ! Prefix for output files
+!   POINT%TIMESTART	= '19000101 000000' ! Start time for the output(yyyymmdd hhmmss)
+!   POINT%TIMESTRIDE 	= '0'		    ! Time stride, increment of output (s)
+!   POINT%TIMECOUNT	= '1000000'	    ! Number of output times 
+!   POINT%SAMEFILE	= 0		    ! Split output into multiple files for each time
+					    ! step or one file (0=one file, 1=separate files)
+!   POINT%PREFIX        = 'wave'	    ! Prefix for output files
 !   POINT%LIST          = 'all'             ! List of points index ['all'|'1 2 3']
 !   POINT%TYPE          = 0                 ! [0=inventory | 1=spectra | 2=mean param | 3=source terms]
 
@@ -22,8 +23,8 @@
  POINT%TIMECOUNT	= '1000000'
  POINT%TIMESPLIT	= 0
  POINT%PREFIX		= 'wave'
- POINT%LIST		    = 'all'
- POINT%TYPE		    = 0                     ! No additional inputs for type 0, inventory output. For other types, see below.
+ POINT%LIST		= 'all'
+ POINT%TYPE		= 0                     ! No additional inputs for type 0, inventory output. For other types, see below.
 /
 
 ! Additional Variables Depending on ITYPE
