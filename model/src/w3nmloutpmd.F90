@@ -68,7 +68,6 @@ MODULE W3NMLOUTPMD
 
   ! miscellaneous
   CHARACTER(256)                :: MSG
-  INTEGER                       :: NDSN = 3 ! TEMP: REMOVE BEFORE TESTING
 
 CONTAINS 
   !/ ------------------------------------------------------------------- /
@@ -137,16 +136,13 @@ CONTAINS
     !
     !/ ------------------------------------------------------------------- /
 
-! TEMP: REMOVE BEFORE TESTING 
-!    USE W3ODATMD, ONLY: NDSE
+USE W3ODATMD, ONLY: NDSE
 
 #ifdef W3_S
     USE W3SERVMD, ONLY: STRACE
 #endif
 
     IMPLICIT NONE
-
-    INTEGER :: NDSE = 6 !TEMP 
 
     ! Define the input arguments
     INTEGER, INTENT(IN)                         :: NDSI
@@ -156,22 +152,14 @@ CONTAINS
     TYPE(NML_PARAM_T), INTENT(INOUT)            :: NML_PARAM
     TYPE(NML_SOURCE_T), INTENT(INOUT)           :: NML_SOURCE
     INTEGER, INTENT(OUT)                        :: IERR
-    
-    ! Define other variables
-    ! INTEGER  :: NDSN = 3
-    IERR = 0 ! TEMP
 
-    ! Print that the subroutine is being called
-    print *, "Calling W3NMLOUTP subroutine to read the namelist file"
+    #ifdef W3_S
+      INTEGER, SAVE                             :: IENT = 0
+    #endif
 
-    ! TEMP: umcomment during actual tests to make available with switches
-    ! #ifdef W3_S
-    !   INTEGER, SAVE                             :: IENT = 0
-    ! #endif
-
-    ! #ifdef W3_S
-    !     CALL STRACE (IENT, 'W3NMLOUNP')
-    ! #endif
+    #ifdef W3_S
+        CALL STRACE (IENT, 'W3NMLOUNP')
+    #endif
 
     ! open namelist log file
     OPEN (NDSN, file=TRIM(INFILE)//'.log', form='formatted', iostat=IERR)
@@ -268,27 +256,24 @@ END SUBROUTINE W3NMLOUTP
     ! 10. Source code :
     !
     !/ ------------------------------------------------------------------- /
+        USE W3ODATMD, ONLY: NDSE
+        USE W3SERVMD, ONLY: EXTCDE
+    #ifdef W3_S
+        USE W3SERVMD, ONLY: STRACE
+    #endif
 
-    ! TEMP: Uncomment during actual tests to make available with switches
-    !     USE W3ODATMD, ONLY: NDSE
-    !     USE W3SERVMD, ONLY: EXTCDE
-    ! #ifdef W3_S
-    !     USE W3SERVMD, ONLY: STRACE
-    ! #endif
+    #ifdef W3_S
+        INTEGER, SAVE                           :: IENT = 0
+    #endif
 
-    ! #ifdef W3_S
-    !     INTEGER, SAVE                           :: IENT = 0
-    ! #endif
-
-    ! #ifdef W3_S
-    !     CALL STRACE (IENT, 'READ_POINT_NML')
-    ! #endif
+    #ifdef W3_S
+        CALL STRACE (IENT, 'READ_POINT_NML')
+    #endif
 
     IMPLICIT NONE
 
     INTEGER, INTENT(IN)                 :: NDSI
     TYPE(NML_POINT_T), INTENT(INOUT)    :: NML_POINT
-    INTEGER                             :: NDSE = 6 !TEMP
 
     ! locals
     INTEGER                                :: IERR
@@ -314,7 +299,7 @@ END SUBROUTINE W3NMLOUTP
       WRITE (NDSE,'(A,/A)') &
            'ERROR: READ_POINT_NML: namelist read error', &
            'ERROR: '//TRIM(MSG)
-      ! CALL EXTCDE (1) !TEMP: Uncomment during actual tests to make available with switches
+      CALL EXTCDE (1) 
     END IF
 
     ! save namelist
@@ -378,30 +363,29 @@ END SUBROUTINE W3NMLOUTP
     !
     !/ ------------------------------------------------------------------- /
 
-!     USE W3ODATMD, ONLY: NDSE
-!     USE W3SERVMD, ONLY: EXTCDE
-! #ifdef W3_S
-!     USE W3SERVMD, ONLY: STRACE
-! #endif
+    USE W3ODATMD, ONLY: NDSE
+    USE W3SERVMD, ONLY: EXTCDE
+#ifdef W3_S
+    USE W3SERVMD, ONLY: STRACE
+#endif
 
     IMPLICIT NONE
 
     INTEGER, INTENT(IN)                 :: NDSI
     TYPE(NML_SPECTRA_T), INTENT(INOUT)  :: NML_SPECTRA
-    INTEGER                             :: NDSE = 6 !TEMP
 
     ! locals
     INTEGER                                :: IERR
     TYPE(NML_SPECTRA_T) :: SPECTRA
     NAMELIST /SPECTRA_NML/ SPECTRA
-! #ifdef W3_S
-!     INTEGER, SAVE                       :: IENT = 0
-! #endif
+#ifdef W3_S
+    INTEGER, SAVE                       :: IENT = 0
+#endif
 
-!     IERR = 0
-! #ifdef W3_S
-!     CALL STRACE (IENT, 'READ_SPECTRA_NML')
-! #endif
+    IERR = 0
+#ifdef W3_S
+    CALL STRACE (IENT, 'READ_SPECTRA_NML')
+#endif
 
     ! set default values for spectra structure
     SPECTRA%OUTPUT      = 3
@@ -417,7 +401,7 @@ END SUBROUTINE W3NMLOUTP
       WRITE (NDSE,'(A,/A)') &
            'ERROR: READ_SPECTRA_NML: namelist read error', &
            'ERROR: '//TRIM(MSG)
-      ! CALL EXTCDE (3) TEMP: Uncomment during actual tests to make available with switches
+      CALL EXTCDE (3)
     END IF
 
     ! save namelist
@@ -485,30 +469,29 @@ END SUBROUTINE W3NMLOUTP
     !
     !/ ------------------------------------------------------------------- /
 
-!     USE W3ODATMD, ONLY: NDSE
-!     USE W3SERVMD, ONLY: EXTCDE
-! #ifdef W3_S
-!     USE W3SERVMD, ONLY: STRACE
-! #endif
+    USE W3ODATMD, ONLY: NDSE
+    USE W3SERVMD, ONLY: EXTCDE
+#ifdef W3_S
+    USE W3SERVMD, ONLY: STRACE
+#endif
 
     IMPLICIT NONE
 
     INTEGER, INTENT(IN)                 :: NDSI
     TYPE(NML_PARAM_T), INTENT(INOUT)    :: NML_PARAM
-    INTEGER                             :: NDSE = 6 !TEMP
 
     ! locals
     INTEGER                                :: IERR
     TYPE(NML_PARAM_T) :: PARAM
     NAMELIST /PARAM_NML/ PARAM
-! #ifdef W3_S
-!     INTEGER, SAVE                       :: IENT = 0
-! #endif
+#ifdef W3_S
+    INTEGER, SAVE                       :: IENT = 0
+#endif
 
-!     IERR = 0
-! #ifdef W3_S
-!     CALL STRACE (IENT, 'READ_PARAM_NML')
-! #endif
+    IERR = 0
+#ifdef W3_S
+    CALL STRACE (IENT, 'READ_PARAM_NML')
+#endif
 
     ! set default values for param structure
     PARAM%OUTPUT      = 3
@@ -520,7 +503,7 @@ END SUBROUTINE W3NMLOUTP
       WRITE (NDSE,'(A,/A)') &
            'ERROR: READ_PARAM_NML: namelist read error', &
            'ERROR: '//TRIM(MSG)
-      ! CALL EXTCDE (4) TEMP: Uncomment during actual tests to make available with switches
+      CALL EXTCDE (4)
     END IF
 
     ! save namelist
@@ -587,31 +570,30 @@ END SUBROUTINE W3NMLOUTP
     !
     !/ ------------------------------------------------------------------- /
 
-    ! USE W3ODATMD, ONLY: NDSE
-    ! USE W3SERVMD, ONLY: EXTCDE
-! #ifdef W3_S
-!     USE W3SERVMD, ONLY: STRACE
-! #endif
+    USE W3ODATMD, ONLY: NDSE
+    USE W3SERVMD, ONLY: EXTCDE
+#ifdef W3_S
+    USE W3SERVMD, ONLY: STRACE
+#endif
 
     IMPLICIT NONE
 
     INTEGER, INTENT(IN)                 :: NDSI
     TYPE(NML_SOURCE_T), INTENT(INOUT)   :: NML_SOURCE
-    INTEGER                             :: NDSE = 6 !TEMP
 
     ! locals
     INTEGER                                :: IERR
     TYPE(NML_SOURCE_T) :: SOURCE
     NAMELIST /SOURCE_NML/ SOURCE
 
-! #ifdef W3_S
-!     INTEGER, SAVE                       :: IENT = 0
-! #endif
+#ifdef W3_S
+    INTEGER, SAVE                       :: IENT = 0
+#endif
 
-!     IERR = 0
-! #ifdef W3_S
-!     CALL STRACE (IENT, 'READ_SOURCE_NML')
-! #endif
+    IERR = 0
+#ifdef W3_S
+    CALL STRACE (IENT, 'READ_SOURCE_NML')
+#endif
 
     ! set default values for source structure
     SOURCE%OUTPUT      = 4
@@ -633,7 +615,7 @@ END SUBROUTINE W3NMLOUTP
       WRITE (NDSE,'(A,/A)') &
            'ERROR: READ_SOURCE_NML: namelist read error', &
            'ERROR: '//TRIM(MSG)
-      ! CALL EXTCDE (5) TEMP: Uncomment during actual tests to make available with switches
+      CALL EXTCDE (5)
     END IF
 
     ! save namelist
@@ -699,18 +681,17 @@ END SUBROUTINE W3NMLOUTP
     ! 10. Source code :
     !
     !/ ------------------------------------------------------------------- /
-    ! TEMP: Uncomment during actual tests to make available with switches
-    ! #ifdef W3_S
-    !   USE W3SERVMD, ONLY: STRACE
-    ! #endif
+    #ifdef W3_S
+      USE W3SERVMD, ONLY: STRACE
+    #endif
 
-    ! #ifdef W3_S
-    !   INTEGER, SAVE                           :: IENT = 0
-    ! #endif
+    #ifdef W3_S
+      INTEGER, SAVE                           :: IENT = 0
+    #endif
 
-    ! #ifdef W3_S
-    !   CALL STRACE (IENT, 'REPORT_POINT_NML')
-    ! #endif
+    #ifdef W3_S
+      CALL STRACE (IENT, 'REPORT_POINT_NML')
+    #endif
 
     IMPLICIT NONE
 
@@ -797,6 +778,7 @@ END SUBROUTINE W3NMLOUTP
     IMPLICIT NONE
 
     TYPE(NML_SPECTRA_T), INTENT(IN) :: NML_SPECTRA
+
 #ifdef W3_S
     INTEGER, SAVE                           :: IENT = 0
 #endif
@@ -885,6 +867,7 @@ END SUBROUTINE W3NMLOUTP
     IMPLICIT NONE
 
     TYPE(NML_PARAM_T), INTENT(IN) :: NML_PARAM
+
 #ifdef W3_S
     INTEGER, SAVE                           :: IENT = 0
 #endif
