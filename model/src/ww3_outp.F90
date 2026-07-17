@@ -7,7 +7,8 @@
 !> @author F. Ardhuin
 !> @author E. Rogers
 !> @author T. Campbell
-!> @date   27-Aug-2015
+!> @author E. Rainville
+!> @date   17-Jul-2026
 !>
 
 #include "w3macros.h"
@@ -26,7 +27,8 @@
 !> @author F. Ardhuin
 !> @author E. Rogers
 !> @author T. Campbell
-!> @date   27-Aug-2015
+!> @author E. Rainville
+!> @date   17-Jul-2026
 !>
 !> @copyright Copyright 2009-2022 National Weather Service (NWS),
 !>       National Oceanic and Atmospheric Administration.  All rights
@@ -44,7 +46,7 @@ PROGRAM W3OUTP
   !/                  |             E. Rogers             |
   !/                  |            T. Campbell            |
   !/                  |                        FORTRAN 90 |
-  !/                  | Last update :         27-Aug-2015 |
+  !/                  | Last update :         17-Jul-2026 |
   !/                  +-----------------------------------+
   !/
   !/    14-Jan-1999 : Final FORTRAN 77                    ( version 1.18 )
@@ -422,7 +424,15 @@ PROGRAM W3OUTP
   !
   !--- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   ! 4.  Read requests from input file.
-  !
+
+  INQUIRE(FILE=TRIM(FNMPRE)//"ww3_ounp.nml", EXIST=FLGNML)
+  IF (FLGNML) THEN
+    ! Read namelist
+    CALL W3NMLOUNP (NDSI, TRIM(FNMPRE)//'ww3_ounp.nml', NML_POINT, NML_FILE, &
+         NML_SPECTRA, NML_PARAM, NML_SOURCE, IERR)
+         
+  END IF ! FLGNML
+
   IF (dynpnt == 1) THEN
 #if W3_BIN2NC
     CALL W3IOPON ( 'READ', NDSOP, IOTEST, 1, TOUT )
