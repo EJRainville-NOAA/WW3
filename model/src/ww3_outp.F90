@@ -245,11 +245,19 @@ PROGRAM W3OUTP
   USE W3GIG1MD, ONLY: W3ADDIG
   USE W3CANOMD, ONLY: W3ADD2NDORDER
 #endif
+
+USE W3NMLOUTPMD
   !
   IMPLICIT NONE
   !/
   !/ ------------------------------------------------------------------- /
   !/ Local parameters
+  !/
+  TYPE(NML_POINT_T)       :: NML_POINT
+  TYPE(NML_FILE_T)        :: NML_FILE
+  TYPE(NML_SPECTRA_T)     :: NML_SPECTRA
+  TYPE(NML_PARAM_T)       :: NML_PARAM
+  TYPE(NML_SOURCE_T)      :: NML_SOURCE
   !/
   INTEGER                 :: NDSI, NDSM, NDSOP,  NDSTRC, NTRACE,  &
        IERR, I, TOUT(2), NOUT, TDUM(2),     &
@@ -280,7 +288,8 @@ PROGRAM W3OUTP
   CHARACTER(LEN=32)       :: WORDS(6)
   CHARACTER(LEN=32)       :: prefix
   INTEGER                 :: dynpnt
-  LOGICAL                 :: PROCESS_POINT_ONLY          
+  LOGICAL                 :: PROCESS_POINT_ONLY
+  LOGICAL                 :: FLGNML          
   INTEGER                 :: ACTIVE_POINT, J_START, J_END
   !/
   !/ ------------------------------------------------------------------- /
@@ -428,7 +437,7 @@ PROGRAM W3OUTP
   INQUIRE(FILE=TRIM(FNMPRE)//"ww3_ounp.nml", EXIST=FLGNML)
   IF (FLGNML) THEN
     ! Read namelist
-    CALL W3NMLOUNP (NDSI, TRIM(FNMPRE)//'ww3_ounp.nml', NML_POINT, NML_FILE, &
+    CALL W3NMLOUTP (NDSI, TRIM(FNMPRE)//'ww3_ounp.nml', NML_POINT, NML_FILE, &
          NML_SPECTRA, NML_PARAM, NML_SOURCE, IERR)
          
   END IF ! FLGNML
