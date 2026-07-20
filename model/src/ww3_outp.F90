@@ -249,6 +249,9 @@ PROGRAM W3OUTP
 USE W3NMLOUTPMD
   !
   IMPLICIT NONE
+  ! If this prints 999, the module is being read perfectly!
+  PRINT *, "Module reads fine if this is 999: ", module_test_val
+  
   !/
   !/ ------------------------------------------------------------------- /
   !/ Local parameters
