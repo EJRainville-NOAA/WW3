@@ -359,16 +359,10 @@ USE W3NMLOUTPMD
   NDSTRC = NDSO
 #endif
   !
+  !
   WRITE (NDSO,900)
   !
-  J      = LEN_TRIM(FNMPRE)
-  OPEN (NDSI,FILE=FNMPRE(:J)//'ww3_outp.inp',STATUS='OLD',        &
-        IOSTAT=IERR)
-  IF (IERR.NE.0) CALL EXTOPN(NDSE,IERR,'W3OUTP','INPUT',40)
-  READ (NDSI,'(A)',IOSTAT=IERR) COMSTR
-  IF (IERR.NE.0) CALL EXTIOF(NDSE,IERR,'W3OUTP','INPUT',41)
-  IF (COMSTR.EQ.' ') COMSTR = '$'
-  WRITE (NDSO,901) COMSTR
+  
   !
   !--- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   ! 2.  Read model definition file.
@@ -387,20 +381,47 @@ USE W3NMLOUTPMD
   XPART  = UNDEF
   !
   !--- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  ! 3.  Read general data and first fields from file
-  !     Output time, time step, number of steps, optional dynpnt and prefix
+  ! 3.  Read output requests from input file.
   !
-  CALL NEXTLN ( COMSTR , NDSI , NDSE )
-  WORDS = ''
-  READ (NDSI, '(A)', IOSTAT=IERR) LINEIN
-  IF (IERR.NE.0) CALL EXTIOF(NDSE,IERR,'W3OUTP','INPUT',41)
-  READ(LINEIN,*,IOSTAT=IERR) WORDS
-  READ(WORDS(1), *, IOSTAT=IERR) TOUT(1)  ! Date (yyyymmdd)
-  READ(WORDS(2), *, IOSTAT=IERR) TOUT(2)  ! Time (hhmmss)
-  READ(WORDS(3), *, IOSTAT=IERR) DTREQ
-  READ(WORDS(4), *, IOSTAT=IERR) NOUT
-  IF (WORDS(5) /= '') READ(WORDS(5), *, IOSTAT=IERR) dynpnt
-  IF (WORDS(6) /= '') prefix = TRIM(WORDS(6))
+  ! Process ww3_outp.nml if it exists
+  INQUIRE(FILE=TRIM(FNMPRE)//"ww3_outp.nml", EXIST=FLGNML)
+  IF (FLGNML) THEN
+    ! Read namelist
+    CALL W3NMLOUTP (NDSI, TRIM(FNMPRE)//'ww3_outp.nml', NML_POINT, &
+         NML_SPECTRA, NML_PARAM, NML_SOURCE, IERR)
+
+    ! 4.1 Time setup IDTIME, DTREQ, NOUT
+    READ(NML_POINT%TIMESTRIDE, *)  DTREQ
+    READ(NML_POINT%TIMECOUNT, *)   NOUT
+    READ(NML_POINT%TIMESTART, *)   TOUT(1), TOUT(2)
+        
+    !REMOVE - Test print statement
+    PRINT *, "Read from ww3_outp.nml: TOUT(1)=", TOUT(1), " TOUT(2)=", TOUT(2), &
+         " DTREQ=", DTREQ, " NOUT=", NOUT
+  END IF ! FLGNML
+
+  ! Process old ww3_outp.inp if it exists
+  IF (.NOT. FLGNML) THEN
+    ! If ww3_outp.nml does not exist, process old ww3_outp.inp
+    J      = LEN_TRIM(FNMPRE)
+    OPEN (NDSI,FILE=TRIM(FNMPRE(:J)//'ww3_outp.inp',STATUS='OLD',IOSTAT=IERR)
+    IF (IERR.NE.0) CALL EXTOPN(NDSE,IERR,'W3OUTP','INPUT',40)
+    READ (NDSI,'(A)',IOSTAT=IERR) COMSTR
+    IF (IERR.NE.0) CALL EXTIOF(NDSE,IERR,'W3OUTP','INPUT',41)
+    IF (COMSTR.EQ.' ') COMSTR = '$'
+    WRITE (NDSO,901) COMSTR
+    CALL NEXTLN ( COMSTR , NDSI , NDSE )
+    WORDS = ''
+    READ (NDSI, '(A)', IOSTAT=IERR) LINEIN
+    IF (IERR.NE.0) CALL EXTIOF(NDSE,IERR,'W3OUTP','INPUT',41)
+    READ(LINEIN,*,IOSTAT=IERR) WORDS
+    READ(WORDS(1), *, IOSTAT=IERR) TOUT(1)  ! Date (yyyymmdd)
+    READ(WORDS(2), *, IOSTAT=IERR) TOUT(2)  ! Time (hhmmss)
+    READ(WORDS(3), *, IOSTAT=IERR) DTREQ
+    READ(WORDS(4), *, IOSTAT=IERR) NOUT
+    IF (WORDS(5) /= '') READ(WORDS(5), *, IOSTAT=IERR) dynpnt
+    IF (WORDS(6) /= '') prefix = TRIM(WORDS(6))
+  END IF
   
   DTREQ  = MAX ( 0. , DTREQ )
   IF ( DTREQ.EQ.0 ) NOUT = 1
@@ -429,19 +450,6 @@ USE W3NMLOUTPMD
       END IF
     END DO
   END IF 
-  !
-  !--- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  ! 4.  Read requests from input file.
-
-  INQUIRE(FILE=TRIM(FNMPRE)//"ww3_outp.nml", EXIST=FLGNML)
-  IF (FLGNML) THEN
-    ! Read namelist
-    CALL W3NMLOUTP (NDSI, TRIM(FNMPRE)//'ww3_outp.nml', NML_POINT, &
-         NML_SPECTRA, NML_PARAM, NML_SOURCE, IERR)
-        
-    !REMOVE - Test print statement
-    PRINT *, "ww3_outp.F90 compiled sucessfully" 
-  END IF ! FLGNML
 
   IF (dynpnt == 1) THEN
 #if W3_BIN2NC
