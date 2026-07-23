@@ -389,11 +389,12 @@ END SUBROUTINE W3NMLOUTP
 #endif
 
     ! set default values for spectra structure
-    SPECTRA%OUTPUT      = 3
-    SPECTRA%SCALE_FAC   = 1
-    SPECTRA%OUTPUT_FAC  = 0
-    SPECTRA%TYPE        = 4
-
+    SPECTRA%OUTPUT              = 3
+    SPECTRA%SCALE_FAC           = 1
+    SPECTRA%OUTPUT_FAC          = 0
+    SPECTRA%TYPE                = 0
+    SPECTRA%UNIT_NUM_TRANS      = 33 
+    SPECTRA%FLAG_UNFORMAT_TRANS = 4
 
     ! read spectra namelist
     REWIND (NDSI)
