@@ -23,9 +23,6 @@ MODULE W3NMLOUTPMD
 
   PUBLIC
 
-  ! Add this test variable:
-  INTEGER, PARAMETER :: module_test_val = 999
-  
   ! point structure
   TYPE NML_POINT_T
     CHARACTER(15)               :: TIMESTART
@@ -102,7 +99,6 @@ CONTAINS
     !      NDSI          Int.
     !      INFILE        Char.
     !      NML_POINT     type.
-    !      NML_FILE      type.
     !      NML_SPECTRA   type.
     !      NML_PARAM     type.
     !      NML_SOURCE    type.

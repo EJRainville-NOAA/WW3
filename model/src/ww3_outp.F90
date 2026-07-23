@@ -248,16 +248,12 @@ PROGRAM W3OUTP
 
 USE W3NMLOUTPMD
   !
-  IMPLICIT NONE
-  ! If this prints 999, the module is being read perfectly!
-  PRINT *, "Module reads fine if this is 999: ", module_test_val
-  
+  IMPLICIT NONE 
   !/
   !/ ------------------------------------------------------------------- /
   !/ Local parameters
   !/
   TYPE(NML_POINT_T)       :: NML_POINT
-  TYPE(NML_FILE_T)        :: NML_FILE
   TYPE(NML_SPECTRA_T)     :: NML_SPECTRA
   TYPE(NML_PARAM_T)       :: NML_PARAM
   TYPE(NML_SOURCE_T)      :: NML_SOURCE
@@ -437,12 +433,14 @@ USE W3NMLOUTPMD
   !--- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   ! 4.  Read requests from input file.
 
-  INQUIRE(FILE=TRIM(FNMPRE)//"ww3_ounp.nml", EXIST=FLGNML)
+  INQUIRE(FILE=TRIM(FNMPRE)//"ww3_outp.nml", EXIST=FLGNML)
   IF (FLGNML) THEN
     ! Read namelist
-    CALL W3NMLOUTP (NDSI, TRIM(FNMPRE)//'ww3_ounp.nml', NML_POINT, NML_FILE, &
+    CALL W3NMLOUTP (NDSI, TRIM(FNMPRE)//'ww3_outp.nml', NML_POINT, &
          NML_SPECTRA, NML_PARAM, NML_SOURCE, IERR)
-         
+        
+    !REMOVE - Test print statement
+    PRINT *, "ww3_outp.F90 compiled sucessfully" 
   END IF ! FLGNML
 
   IF (dynpnt == 1) THEN
