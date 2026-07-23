@@ -71,6 +71,7 @@ MODULE W3NMLOUTPMD
 
   ! miscellaneous
   CHARACTER(256)                :: MSG
+  INTEGER                       :: NDSN
 
 CONTAINS 
   !/ ------------------------------------------------------------------- /
@@ -165,6 +166,7 @@ USE W3ODATMD, ONLY: NDSE
     #endif
 
     ! open namelist log file
+    NDSN = 3
     OPEN (NDSN, file=TRIM(INFILE)//'.log', form='formatted', iostat=IERR)
     IF (IERR.NE.0) THEN
       WRITE (NDSE,'(A)') 'ERROR: open full nml file '//TRIM(INFILE)//'.log failed'
