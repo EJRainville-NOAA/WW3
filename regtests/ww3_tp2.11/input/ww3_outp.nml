@@ -60,6 +60,7 @@
     SPECTRA%OUTPUT                = 3
     SPECTRA%SCALE_FAC             = 0.  ! Scale factor (-1=disabled)
     SPECTRA%OUTPUT_FAC            = 0.  ! Output factor (0=normalized)
+    SPECTRA%TYPE   		  = 0   ! 0: Transfer file, 1: Table of 1-D spectra
     SPECTRA%UNIT_NUM_TRANS        = 33 
     SPECTRA%FLAG_UNFORMAT_TRANS   = F
 /
