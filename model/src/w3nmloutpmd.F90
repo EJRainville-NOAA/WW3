@@ -41,7 +41,7 @@ MODULE W3NMLOUTPMD
     REAL                        :: OUTPUT_FAC
     INTEGER                     :: TYPE
     INTEGER                     :: UNIT_NUM_TRANS
-    INTEGER                     :: FLAG_UNFORMAT_TRANS
+    LOGICAL                     :: FLAG_UNFORMAT_TRANS
   END TYPE NML_SPECTRA_T
 
   ! param structure
@@ -394,7 +394,7 @@ END SUBROUTINE W3NMLOUTP
     SPECTRA%OUTPUT_FAC          = 0
     SPECTRA%TYPE                = 0
     SPECTRA%UNIT_NUM_TRANS      = 33 
-    SPECTRA%FLAG_UNFORMAT_TRANS = 4
+    SPECTRA%FLAG_UNFORMAT_TRANS = F
 
     ! read spectra namelist
     REWIND (NDSI)
