@@ -11,7 +11,7 @@
 !   POINT%TIMESTART	= '19000101 000000' ! Start time for the output(yyyymmdd hhmmss)
 !   POINT%TIMESTRIDE 	= '0'		    ! Time stride, increment of output (s)
 !   POINT%TIMECOUNT	= '1000000'	    ! Number of output times 
-!   POINT%SAMEFILE	= 0		    ! Split output into multiple files for each time
+!   POINT%TIMESPLIT	= 0		    ! Split output into multiple files for each time
 					    ! step or one file (0=one file, 1=separate files)
 !   POINT%PREFIX        = 'wave'	    ! Prefix for output files
 !   POINT%LIST          = 'all'             ! List of points index ['all'|'1 2 3']
@@ -23,7 +23,7 @@
  POINT%TIMECOUNT	= '1000000'
  POINT%TIMESPLIT	= 0
  POINT%PREFIX		= 'wave'
- POINT%LIST		= 'all'
+ POINT%LIST		    = 'all'
  POINT%ITYPE		= 0                     ! No additional inputs for type 0, inventory output. For other types, see below.
 /
 
@@ -38,7 +38,7 @@
 !     SPECTRA%SCALE_FAC             = 1        ! Scale factor (-1=disabled)
 !     SPECTRA%OUTPUT_FAC            = 0        ! Output factor (0=normalized)
 !     SPECTRA%ITYPE		    = 0
-      SPECTRA%UNIT_NUM_TRANS        = 33       ! Unit number for transfer file, also used in table file name
+!     SPECTRA%UNIT_NUM_TRANS        = 33       ! Unit number for transfer file, also used in table file name
 !     SPECTRA%FLAG_UNFORMAT_TRANS   = .FALSE.        ! Flag for unformatted transfer file (.TRUE. or .FALSE.).
 
 ! The transfer file contains records with the following contents.
@@ -61,7 +61,6 @@
     SPECTRA%OUTPUT                = 3
     SPECTRA%SCALE_FAC             = 1  ! Scale factor (-1=disabled)
     SPECTRA%OUTPUT_FAC            = 0  ! Output factor (0=normalized)
-    SPECTRA%ITYPE                  = 0  ! 0: Transfer file, 1: Table of 1-D spectra
     SPECTRA%UNIT_NUM_TRANS        = 33 
     SPECTRA%FLAG_UNFORMAT_TRANS   = .FALSE.
 /

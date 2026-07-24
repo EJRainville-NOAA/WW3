@@ -395,9 +395,66 @@ USE W3NMLOUTPMD
     READ(NML_POINT%TIMECOUNT, *)   NOUT
     READ(NML_POINT%TIMESTART, *)   TOUT(1), TOUT(2)
         
-    !REMOVE - Test print statement
-    PRINT *, "Read from ww3_outp.nml: TOUT(1)=", TOUT(1), " TOUT(2)=", TOUT(2), &
-         " DTREQ=", DTREQ, " NOUT=", NOUT
+    ! 4.2 Output points NOPTS
+    ALLOCATE(POINTLIST(NOPTS+1))
+    POINTLIST(:)=''
+    CALL STRSPLIT(NML_POINT%LIST,POINTLIST)
+    !
+    ALLOCATE ( FLREQ(NOPTS) )
+    ALLOCATE ( INDREQTMP(NOPTS) )
+    FLREQ = .FALSE.
+    NREQ   = 0
+    ! full list of point indexes
+    IF (TRIM(POINTLIST(1)).EQ.'all') THEN
+      FLREQ = .TRUE.
+      NREQ = NOPTS
+      INDREQTMP=(/(J,J=1,NREQ)/)
+      ! user defined list of point indexes
+    ELSE
+      IP=0
+      DO WHILE (LEN_TRIM(POINTLIST(IP+1)).NE.0)
+        IP=IP+1
+        READ(POINTLIST(IP),*) IPOINT
+        ! existing index in out_pnt.ww3
+        IF ((IPOINT .LE. NOPTS) .AND. (NREQ .LT. NOPTS)) THEN
+          IF ( .NOT. FLREQ(IPOINT) ) THEN
+            NREQ = NREQ + 1
+            INDREQTMP(NREQ)=IPOINT
+          END IF
+          FLREQ(IPOINT) = .TRUE.
+        END IF
+      END DO
+    END IF
+
+    ! 4.3 Output type
+    ITYPE = NML_POINT%TYPE
+    prefix = NML_POINT%PREFIX
+    dynpnt = NML_POINT%TIMESPLIT
+
+    ! Get variables for output type, no additonal variables for ITYPE=0
+    IF ( ITYPE .EQ. 1 ) THEN
+      OTYPE = NML_SPECTRA%OUTPUT
+      SCALE1 = NML_SPECTRA%SCALE_FAC
+      SCALE2 = NML_SPECTRA%OUTPUT_FAC
+      NDSTAB = NML_SPECTRA%UNIT_NUM_TRANS
+      FLFORM = NML_SPECTRA%FLAG_UNFORMAT_TRANS
+    ELSE IF (ITYPE .EQ. 2) THEN
+      OTYPE = NML_PARAM%OUTPUT
+      NDSTAB = NML_PARAM%UNIT_NUM_TABLE
+    ELSE IF (ITYPE .EQ. 3) THEN
+      OTYPE = NML_SOURCE%OUTPUT
+      SCALE1 = NML_SOURCE%SCALE_FAC
+      SCALE2 = NML_SOURCE%OUTPUT_FAC
+      ISCALE = NML_SOURCE%TABLE_FAC
+      FLSRCE(1) = NML_SOURCE%SPECTRUM
+      FLSRCE(2) = NML_SOURCE%INPUT
+      FLSRCE(3) = NML_SOURCE%INTERACTIONS
+      FLSRCE(4) = NML_SOURCE%DISSIPATION
+      FLSRCE(5) = NML_SOURCE%BOTTOM
+      FLSRCE(6) = NML_SOURCE%ICE
+      FLSRCE(7) = NML_SOURCE%TOTAL
+    END IF
+
   END IF ! FLGNML
 
   ! Process old ww3_outp.inp if it exists
@@ -421,7 +478,11 @@ USE W3NMLOUTPMD
     READ(WORDS(4), *, IOSTAT=IERR) NOUT
     IF (WORDS(5) /= '') READ(WORDS(5), *, IOSTAT=IERR) dynpnt
     IF (WORDS(6) /= '') prefix = TRIM(WORDS(6))
-  END IF
+
+    CALL NEXTLN ( COMSTR , NDSI , NDSE )
+    READ (NDSI,*,IOSTAT=IERR) OTYPE, NDSTAB
+  
+  END IF ! .NOT. FLGNML
   
   DTREQ  = MAX ( 0. , DTREQ )
   IF ( DTREQ.EQ.0 ) NOUT = 1
