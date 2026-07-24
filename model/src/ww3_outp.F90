@@ -262,7 +262,7 @@ USE W3NMLOUTPMD
        IERR, I, TOUT(2), NOUT, TDUM(2),     &
        NREQ, IPOINT, ITYPE, OTYPE, NDSTAB,  &
        IOTEST, IK, ITH, IOUT, J, DIMXP,     &
-       NDSBUL, NDSCSV, ICSV, IJ, NDSTABSPC
+       NDSBUL, NDSCSV, ICSV, IJ, NDSTABSPC, IP
 #ifdef W3_NCO
   INTEGER                 :: NDSCBUL
 #endif
@@ -290,6 +290,9 @@ USE W3NMLOUTPMD
   LOGICAL                 :: PROCESS_POINT_ONLY
   LOGICAL                 :: FLGNML          
   INTEGER                 :: ACTIVE_POINT, J_START, J_END
+  CHARACTER(LEN=100),ALLOCATABLE      :: POINTLIST(:)
+  INTEGER, ALLOCATABLE    :: INDREQ(:), INDREQTMP(:)
+
   !/
   !/ ------------------------------------------------------------------- /
   !/
@@ -427,7 +430,7 @@ USE W3NMLOUTPMD
     END IF
 
     ! 4.3 Output type
-    ITYPE = NML_POINT%TYPE
+    ITYPE = NML_POINT%ITYPE
     prefix = NML_POINT%PREFIX
     dynpnt = NML_POINT%TIMESPLIT
 
