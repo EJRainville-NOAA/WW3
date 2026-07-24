@@ -15,7 +15,7 @@
 					    ! step or one file (0=one file, 1=separate files)
 !   POINT%PREFIX        = 'wave'	    ! Prefix for output files
 !   POINT%LIST          = 'all'             ! List of points index ['all'|'1 2 3']
-!   POINT%TYPE          = 0                 ! [0=inventory | 1=spectra | 2=mean param | 3=source terms]
+!   POINT%ITYPE          = 0                 ! [0=inventory | 1=spectra | 2=mean param | 3=source terms]
 
 &POINT_NML
  POINT%TIMESTART	= '19000101 000000'
@@ -24,7 +24,7 @@
  POINT%TIMESPLIT	= 0
  POINT%PREFIX		= 'wave'
  POINT%LIST		= 'all'
- POINT%TYPE		= 0                     ! No additional inputs for type 0, inventory output. For other types, see below.
+ POINT%ITYPE		= 0                     ! No additional inputs for type 0, inventory output. For other types, see below.
 /
 
 ! Additional Variables Depending on ITYPE
@@ -37,9 +37,9 @@
 !                                              ! 3: Transfer file
 !     SPECTRA%SCALE_FAC             = 1        ! Scale factor (-1=disabled)
 !     SPECTRA%OUTPUT_FAC            = 0        ! Output factor (0=normalized)
-!     SPECTRA%TYPE		    = 0
+!     SPECTRA%ITYPE		    = 0
       SPECTRA%UNIT_NUM_TRANS        = 33       ! Unit number for transfer file, also used in table file name
-!     SPECTRA%FLAG_UNFORMAT_TRANS   = F        ! Flag for unformatted transfer file (T or F).
+!     SPECTRA%FLAG_UNFORMAT_TRANS   = .FALSE.        ! Flag for unformatted transfer file (.TRUE. or .FALSE.).
 
 ! The transfer file contains records with the following contents.
 ! - File ID in quotes, number of frequencies, directions and points.
@@ -61,9 +61,9 @@
     SPECTRA%OUTPUT                = 3
     SPECTRA%SCALE_FAC             = 1  ! Scale factor (-1=disabled)
     SPECTRA%OUTPUT_FAC            = 0  ! Output factor (0=normalized)
-    SPECTRA%TYPE                  = 0  ! 0: Transfer file, 1: Table of 1-D spectra
+    SPECTRA%ITYPE                  = 0  ! 0: Transfer file, 1: Table of 1-D spectra
     SPECTRA%UNIT_NUM_TRANS        = 33 
-    SPECTRA%FLAG_UNFORMAT_TRANS   = F
+    SPECTRA%FLAG_UNFORMAT_TRANS   = .FALSE.
 /
 
 !  ITYPE=2: Mean Parameters Output
