@@ -31,7 +31,7 @@ MODULE W3NMLOUTPMD
     INTEGER                     :: TIMESPLIT
     CHARACTER(30)               :: PREFIX
     CHARACTER(1024)             :: LIST
-    INTEGER                     :: TYPE 
+    INTEGER                     :: ITYPE 
   END TYPE NML_POINT_T
 
   ! spectra structure
@@ -39,7 +39,7 @@ MODULE W3NMLOUTPMD
     INTEGER                     :: OUTPUT
     REAL                        :: SCALE_FAC
     REAL                        :: OUTPUT_FAC
-    INTEGER                     :: TYPE
+    INTEGER                     :: ITYPE
     INTEGER                     :: UNIT_NUM_TRANS
     INTEGER                     :: FLAG_UNFORMAT_TRANS
   END TYPE NML_SPECTRA_T
@@ -291,7 +291,7 @@ END SUBROUTINE W3NMLOUTP
     POINT%TIMESPLIT = 0
     POINT%PREFIX = 'wave'
     POINT%LIST = 'all'
-    POINT%TYPE = 1
+    POINT%ITYPE = 1
 
     ! read point namelist
     REWIND (NDSI)
@@ -392,7 +392,7 @@ END SUBROUTINE W3NMLOUTP
     SPECTRA%OUTPUT              = 3
     SPECTRA%SCALE_FAC           = 1
     SPECTRA%OUTPUT_FAC          = 0
-    SPECTRA%TYPE                = 0
+    SPECTRA%ITYPE                = 0
     SPECTRA%UNIT_NUM_TRANS      = 33 
     SPECTRA%FLAG_UNFORMAT_TRANS = 4
 
@@ -707,7 +707,7 @@ END SUBROUTINE W3NMLOUTP
     WRITE (NDSN,11) TRIM(MSG),'TIMESPLIT  = ', NML_POINT%TIMESPLIT
     WRITE (NDSN,10) TRIM(MSG),'PREFIX     = ', TRIM(NML_POINT%PREFIX)
     WRITE (NDSN,10) TRIM(MSG),'LIST       = ', TRIM(NML_POINT%LIST)
-    WRITE (NDSN,11) TRIM(MSG),'TYPE       = ', NML_POINT%TYPE
+    WRITE (NDSN,11) TRIM(MSG),'TYPE       = ', NML_POINT%ITYPE
 
     10 FORMAT (A,2X,A,A)
     11 FORMAT (A,2X,A,I8)
