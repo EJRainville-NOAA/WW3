@@ -15,7 +15,7 @@
 					    ! step or one file (0=one file, 1=separate files)
 !   POINT%PREFIX        = 'wave'	    ! Prefix for output files
 !   POINT%LIST          = 'all'             ! List of points index ['all'|'1 2 3']
-!   POINT%TYPE          = 0                 ! [0=inventory | 1=spectra | 2=mean param | 3=source terms]
+!   POINT%ITYPE          = 0                 ! [0=inventory | 1=spectra | 2=mean param | 3=source terms]
 
 &POINT_NML
  POINT%TIMESTART	= '19680606 060000'
@@ -24,7 +24,7 @@
  POINT%TIMESPLIT	= 0
  POINT%PREFIX		= ''
  POINT%LIST		= '1 2 3 4 5 6 7 8'
- POINT%TYPE		= 1                     ! No additional inputs for type 0, inventory output. For other types, see below.
+ POINT%ITYPE		= 1                     ! No additional inputs for type 0, inventory output. For other types, see below.
 /
 
 ! Additional Variables Depending on ITYPE
@@ -38,7 +38,7 @@
 !     SPECTRA%SCALE_FAC             = 1        ! Scale factor (-1=disabled)
 !     SPECTRA%OUTPUT_FAC            = 0        ! Output factor (0=normalized)
 !     SPECTRA%UNIT_NUM_TRANS        = 33       ! Unit number for transfer file, also used in table file name
-!     SPECTRA%FLAG_UNFORMAT_TRANS   = F        ! Flag for unformatted transfer file (T or F).
+!     SPECTRA%FLAG_UNFORMAT_TRANS   = .FALSE.  ! Flag for unformatted transfer file (T or F).
 
 ! The transfer file contains records with the following contents.
 ! - File ID in quotes, number of frequencies, directions and points.
@@ -60,9 +60,9 @@
     SPECTRA%OUTPUT                = 3
     SPECTRA%SCALE_FAC             = 0.  ! Scale factor (-1=disabled)
     SPECTRA%OUTPUT_FAC            = 0.  ! Output factor (0=normalized)
-    SPECTRA%TYPE   		  = 0   ! 0: Transfer file, 1: Table of 1-D spectra
+    SPECTRA%ITYPE   		  = 0   ! 0: Transfer file, 1: Table of 1-D spectra
     SPECTRA%UNIT_NUM_TRANS        = 33 
-    SPECTRA%FLAG_UNFORMAT_TRANS   = F
+    SPECTRA%FLAG_UNFORMAT_TRANS   = .FALSE.
 /
 
 !  ITYPE=2: Mean Parameters Output
@@ -115,13 +115,13 @@
 !                                                          1 : Nondimensional in terms of U10
 !                                                          2 : Nondimensional in terms of U*
 !                                                          3-5: like 0-2 with f normalized with fp.
-!     SOURCE%SPECTRUM      = T             ! [T|F]
-!     SOURCE%INPUT         = T             ! [T|F]
-!     SOURCE%INTERACTIONS  = T             ! [T|F]
-!     SOURCE%DISSIPATION   = T             ! [T|F]
-!     SOURCE%BOTTOM        = T             ! [T|F]
-!     SOURCE%ICE           = T             ! [T|F]
-!     SOURCE%TOTAL         = T             ! [T|F]
+!     SOURCE%SPECTRUM      = .TRUE.             ! [T|F]
+!     SOURCE%INPUT         = .TRUE.             ! [T|F]
+!     SOURCE%INTERACTIONS  = .TRUE.             ! [T|F]
+!     SOURCE%DISSIPATION   = .TRUE.             ! [T|F]
+!     SOURCE%BOTTOM        = .TRUE.             ! [T|F]
+!     SOURCE%ICE           = .TRUE.             ! [T|F]
+!     SOURCE%TOTAL         = .TRUE.             ! [T|F]
 !
 ! Table of 1-D S(f) content :
 !   - time, station id, station name, longitude, latitude
@@ -174,13 +174,13 @@
                                                           !1 : Nondimensional in terms of U10
                                                           !2 : Nondimensional in terms of U*
                                                           !3-5: like 0-2 with f normalized with fp.
-     SOURCE%SPECTRUM      = T             ! [T|F]
-     SOURCE%INPUT         = T             ! [T|F]
-     SOURCE%INTERACTIONS  = T             ! [T|F]
-     SOURCE%DISSIPATION   = T             ! [T|F]
-     SOURCE%BOTTOM        = T             ! [T|F]
-     SOURCE%ICE           = T             ! [T|F]
-     SOURCE%TOTAL         = T             ! [T|F]
+     SOURCE%SPECTRUM      = .TRUE.             ! [T|F]
+     SOURCE%INPUT         = .TRUE.             ! [T|F]
+     SOURCE%INTERACTIONS  = .TRUE.             ! [T|F]
+     SOURCE%DISSIPATION   = .TRUE.             ! [T|F]
+     SOURCE%BOTTOM        = .TRUE.             ! [T|F]
+     SOURCE%ICE           = .TRUE.             ! [T|F]
+     SOURCE%TOTAL         = .TRUE.             ! [T|F]
 /
 
 
