@@ -386,6 +386,14 @@ USE W3NMLOUTPMD
   !--- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   ! 3.  Read output requests from input file.
   !
+  ! Allocate variables
+  ALLOCATE(POINTLIST(NOPTS+1))
+  POINTLIST(:)=''
+  ALLOCATE ( FLREQ(NOPTS) )
+  ALLOCATE ( INDREQTMP(NOPTS) )
+  FLREQ = .FALSE.
+  NREQ = 0
+
   ! Process ww3_outp.nml if it exists
   INQUIRE(FILE=TRIM(FNMPRE)//"ww3_outp.nml", EXIST=FLGNML)
   IF (FLGNML) THEN
@@ -399,14 +407,8 @@ USE W3NMLOUTPMD
     READ(NML_POINT%TIMESTART, *)   TOUT(1), TOUT(2)
         
     ! 4.2 Output points NOPTS
-    ALLOCATE(POINTLIST(NOPTS+1))
-    POINTLIST(:)=''
     CALL STRSPLIT(NML_POINT%LIST,POINTLIST)
-    !
-    ALLOCATE ( FLREQ(NOPTS) )
-    ALLOCATE ( INDREQTMP(NOPTS) )
-    FLREQ = .FALSE.
-    NREQ   = 0
+
     ! full list of point indexes
     IF (TRIM(POINTLIST(1)).EQ.'all') THEN
       FLREQ = .TRUE.
@@ -549,9 +551,6 @@ USE W3NMLOUTPMD
   !
   ! ... Output points
   !
-  ALLOCATE ( FLREQ(NOPTS) )
-  FLREQ = .FALSE.
-  NREQ   = 0
   !
   DO I=1, NOPTS
     ! reads point index
