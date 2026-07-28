@@ -493,9 +493,69 @@ USE W3NMLOUTPMD
     IF (WORDS(5) /= '') READ(WORDS(5), *, IOSTAT=IERR) dynpnt
     IF (WORDS(6) /= '') prefix = TRIM(WORDS(6))
 
+    ! Output points
+    DO I=1, NOPTS
+      ! reads point index
+      CALL NEXTLN ( COMSTR , NDSI , NDSE )
+      READ (NDSI,*,IOSTAT=IERR) IPOINT
+      IF (IERR.NE.0) CALL EXTIOF(NDSE,IERR,'W3OUTP','INPUT',41)
+      ! last index
+      IF (IPOINT .LT. 0) THEN
+        IF (I.EQ.1) THEN
+          FLREQ = .TRUE.
+          NREQ = NOPTS
+          INDREQTMP=(/(J,J=1,NREQ)/)
+        END IF
+        EXIT
+      END IF
+      ! existing index in out_pnt.ww3
+      IF ( (IPOINT .GT. 0) .AND. (IPOINT .LE. NOPTS) ) THEN
+        IF ( .NOT. FLREQ(IPOINT) ) THEN
+          NREQ = NREQ + 1
+          INDREQTMP(NREQ)=IPOINT
+        END IF
+        FLREQ(IPOINT) = .TRUE.
+      END IF
+      ! read the 'end of list' if nopts reached before it
+      IF ( (IPOINT .GT. 0) .AND. (NREQ .EQ. NOPTS) ) THEN
+        CALL NEXTLN ( COMSTR , NDSI , NDSE )
+        READ (NDSI,*,IOSTAT=IERR) IPOINT
+        IF (IERR.NE.0) CALL EXTIOF(NDSE,IERR,'W3OUTP','INPUT',41)
+      END IF
+    END DO
+    ! check if last point index is -1
+    IF (IPOINT .NE. -1) THEN
+      WRITE (NDSE,1007)
+      CALL EXTCDE ( 47 )
+    END IF
+    
+    ! 4.3 Output type 
+    CALL NEXTLN ( COMSTR , NDSI , NDSE )
+    READ (NDSI,*,IOSTAT=IERR) ITYPE
+    IF (IERR.NE.0) CALL EXTIOF(NDSE,IERR,'W3OUTP','INPUT',41)
+    
+    ! Type 1 Parameters 
+    CALL NEXTLN ( COMSTR , NDSI , NDSE )
+    READ (NDSI,*,IOSTAT=IERR) OTYPE, SCALE1, SCALE2,        &
+         NDSTAB, FLFORM
+    IF (IERR.NE.0) CALL EXTIOF(NDSE,IERR,'W3OUTP','INPUT',41)
+
+    ! Type 2 Parameters
     CALL NEXTLN ( COMSTR , NDSI , NDSE )
     READ (NDSI,*,IOSTAT=IERR) OTYPE, NDSTAB
-  
+    IF (IERR.NE.0) CALL EXTIOF(NDSE,IERR,'W3OUTP','INPUT',41)
+
+    ! Type 3 Parameters
+    CALL NEXTLN ( COMSTR , NDSI , NDSE )
+    READ (NDSI,*,IOSTAT=IERR) OTYPE, SCALE1, SCALE2,        &
+         NDSTAB, FLSRCE, ISCALE, FLFORM
+    IF (IERR.NE.0) CALL EXTIOF(NDSE,IERR,'W3OUTP','INPUT',41)
+
+    ! Type 4 Parameters
+    CALL NEXTLN ( COMSTR , NDSI , NDSE )
+    READ (NDSI,*,IOSTAT=IERR) OTYPE, NDSTAB, TIMEV, HTYPE
+    IF (IERR.NE.0) CALL EXTIOF(NDSE,IERR,'W3OUTP','INPUT',41)
+
   END IF ! .NOT. FLGNML
   
   DTREQ  = MAX ( 0. , DTREQ )
@@ -515,7 +575,6 @@ USE W3NMLOUTPMD
 #else
     CALL W3IOPO ( 'READ', NDSOP, IOTEST )
 #endif
-  !
     WRITE (NDSO,930)
     DO I=1, NOPTS
       IF ( FLAGLL ) THEN
@@ -558,49 +617,10 @@ USE W3NMLOUTPMD
   IDTIME(21:23) = '   '
   WRITE (NDSO,941) IDTIME, NOUT
   !
-  ! ... Output points
-  !
-  !
-  DO I=1, NOPTS
-    ! reads point index
-    CALL NEXTLN ( COMSTR , NDSI , NDSE )
-    READ (NDSI,*,IOSTAT=IERR) IPOINT
-    IF (IERR.NE.0) CALL EXTIOF(NDSE,IERR,'W3OUTP','INPUT',41)
-    ! last index
-    IF (IPOINT .LT. 0) THEN
-      IF (I.EQ.1) THEN
-        FLREQ = .TRUE.
-        NREQ = NOPTS
-      END IF
-      EXIT
-    END IF
-    ! existing index in out_pnt.ww3
-    IF ( (IPOINT .GT. 0) .AND. (IPOINT .LE. NOPTS) ) THEN
-      IF ( .NOT. FLREQ(IPOINT) ) THEN
-        NREQ = NREQ + 1
-      END IF
-      FLREQ(IPOINT) = .TRUE.
-    END IF
-    ! read the 'end of list' if nopts reached before it
-    IF ( (IPOINT .GT. 0) .AND. (NREQ .EQ. NOPTS) ) THEN
-      CALL NEXTLN ( COMSTR , NDSI , NDSE )
-      READ (NDSI,*,IOSTAT=IERR) IPOINT
-      IF (IERR.NE.0) CALL EXTIOF(NDSE,IERR,'W3OUTP','INPUT',41)
-    END IF
-  END DO
-  ! check if last point index is -1
-  IF (IPOINT .NE. -1) THEN
-    WRITE (NDSE,1007)
-    CALL EXTCDE ( 47 )
-  END IF
+
 
   !
   ! ... Output type
-  !
-  CALL NEXTLN ( COMSTR , NDSI , NDSE )
-  READ (NDSI,*,IOSTAT=IERR) ITYPE
-  IF (IERR.NE.0) CALL EXTIOF(NDSE,IERR,'W3OUTP','INPUT',41)
-  !
   ! ... ITYPE = 0
   !
   IF ( ITYPE .EQ. 0 ) THEN
@@ -640,10 +660,6 @@ USE W3NMLOUTPMD
     !
   ELSE IF (ITYPE .EQ. 1) THEN
     WRITE (NDSO,942) ITYPE, '1-D and/or 2-D spectra'
-    CALL NEXTLN ( COMSTR , NDSI , NDSE )
-    READ (NDSI,*,IOSTAT=IERR) OTYPE, SCALE1, SCALE2,        &
-         NDSTAB, FLFORM
-    IF (IERR.NE.0) CALL EXTIOF(NDSE,IERR,'W3OUTP','INPUT',41)
 #ifdef W3_NCO
     NDSTAB = 51
 #endif
@@ -742,9 +758,7 @@ USE W3NMLOUTPMD
     !
   ELSE IF (ITYPE .EQ. 2) THEN
     WRITE (NDSO,942) ITYPE, 'Table of mean wave parameters'
-    CALL NEXTLN ( COMSTR , NDSI , NDSE )
-    READ (NDSI,*,IOSTAT=IERR) OTYPE, NDSTAB
-    IF (IERR.NE.0) CALL EXTIOF(NDSE,IERR,'W3OUTP','INPUT',41)
+
 #ifdef W3_NCO
     NDSTAB = 51
 #endif
@@ -777,10 +791,6 @@ USE W3NMLOUTPMD
     !
   ELSE IF (ITYPE .EQ. 3) THEN
     WRITE (NDSO,942) ITYPE, 'Source terms'
-    CALL NEXTLN ( COMSTR , NDSI , NDSE )
-    READ (NDSI,*,IOSTAT=IERR) OTYPE, SCALE1, SCALE2,        &
-         NDSTAB, FLSRCE, ISCALE, FLFORM
-    IF (IERR.NE.0) CALL EXTIOF(NDSE,IERR,'W3OUTP','INPUT',41)
 #ifdef W3_NCO
     NDSTAB = 51
 #endif
@@ -878,9 +888,6 @@ USE W3NMLOUTPMD
     !
   ELSE IF (ITYPE .EQ. 4) THEN
     WRITE (NDSO,942) ITYPE, 'Spectral partitions or bulletins'
-    CALL NEXTLN ( COMSTR , NDSI , NDSE )
-    READ (NDSI,*,IOSTAT=IERR) OTYPE, NDSTAB, TIMEV, HTYPE
-    IF (IERR.NE.0) CALL EXTIOF(NDSE,IERR,'W3OUTP','INPUT',41)
 #ifdef W3_NCO
     NDSTAB = 51
 #endif
