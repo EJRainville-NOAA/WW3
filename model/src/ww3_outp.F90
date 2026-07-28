@@ -402,11 +402,9 @@ USE W3NMLOUTPMD
          NML_SPECTRA, NML_PARAM, NML_SOURCE, IERR)
 
     ! 4.1 Time setup IDTIME, DTREQ, NOUT
-    print *, "starting to read point"
     READ(NML_POINT%TIMESTRIDE, *)  DTREQ
     READ(NML_POINT%TIMECOUNT, *)   NOUT
     READ(NML_POINT%TIMESTART, *)   TOUT(1), TOUT(2)
-    print *, "finished reading point" 
     
     ! 4.2 Output points NOPTS
     CALL STRSPLIT(NML_POINT%LIST,POINTLIST)
@@ -468,7 +466,6 @@ USE W3NMLOUTPMD
       FLSRCE(6) = NML_SOURCE%ICE
       FLSRCE(7) = NML_SOURCE%TOTAL
     END IF
-  print *, "end of read in section"
   END IF ! FLGNML
 
   ! Process old ww3_outp.inp if it exists
