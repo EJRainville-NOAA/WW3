@@ -181,7 +181,7 @@ PROGRAM W3OUTP
   !
   !     - Tables written to file 'tabNN.ww3', where NN is the
   !       unit umber (NDSTAB).
-  !     - Transfder file written to ww3.yymmddhh.spc with multiple
+  !     - Transfer file written to ww3.yymmddhh.spc with multiple
   !       spectra and times in file. yymmddhh relates to first
   !       output (NDSTAB).
   !     - !/IC1 !/IC2 !/IC3 !/IC4 !/IC5 are not included in dissipation term
@@ -409,12 +409,16 @@ USE W3NMLOUTPMD
     ! 4.2 Output points NOPTS
     CALL STRSPLIT(NML_POINT%LIST,POINTLIST)
 
+    print *, "POINTLIST = ", POINTLIST
+
     ! full list of point indexes
     IF (TRIM(POINTLIST(1)).EQ.'all') THEN
       FLREQ = .TRUE.
       NREQ = NOPTS
       INDREQTMP=(/(J,J=1,NREQ)/)
       ! user defined list of point indexes
+      print *, "Entered the 'all' points if statement"
+      print *, "NREQ = ", NREQ
     ELSE
       IP=0
       ! Ensure IP doesn't exceedthe allocated size of POINTLIST (NOPTS)
@@ -434,6 +438,8 @@ USE W3NMLOUTPMD
           FLREQ(IPOINT) = .TRUE.
         END IF
       END DO
+      print *, "Entered the other points if statement"
+      print *, "NREQ = ", NREQ
     END IF
 
     ! 4.3 Output type
