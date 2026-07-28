@@ -419,11 +419,16 @@ USE W3NMLOUTPMD
       ! user defined list of point indexes
     ELSE
       IP=0
-      DO WHILE (LEN_TRIM(POINTLIST(IP+1)).NE.0)
+      ! Ensure IP doesn't exceedthe allocated size of POINTLIST (NOPTS)
+      DO WHILE (IP .LT. NOPTS+1)
         IP=IP+1
-        READ(POINTLIST(IP),*) IPOINT
+        READ(POINTLIST(IP),*,IOSTAT=IERR) IPOINT
+        
+        ! Skip to next if the read failed
+        IF (IERR .NE. 0) CYCLE
+        
         ! existing index in out_pnt.ww3
-        IF ((IPOINT .LE. NOPTS) .AND. (NREQ .LT. NOPTS)) THEN
+        IF ((IPOINT .GT. 0) .AND. (IPOINT .LE. NOPTS) .AND.  (NREQ .LT. NOPTS)) THEN
           IF ( .NOT. FLREQ(IPOINT) ) THEN
             NREQ = NREQ + 1
             INDREQTMP(NREQ)=IPOINT
@@ -439,7 +444,9 @@ USE W3NMLOUTPMD
     dynpnt = NML_POINT%TIMESPLIT
 
     ! Get variables for output type, no additonal variables for ITYPE=0
-    IF ( ITYPE .EQ. 1 ) THEN
+    IF (ITYPE .EQ. 0) THEN
+        ! ITYPE = 0 requires no extra variables.
+    ELSE IF (ITYPE .EQ. 1) THEN
       OTYPE = NML_SPECTRA%OUTPUT
       SCALE1 = NML_SPECTRA%SCALE_FAC
       SCALE2 = NML_SPECTRA%OUTPUT_FAC
