@@ -410,6 +410,7 @@ USE W3NMLOUTPMD
     CALL STRSPLIT(NML_POINT%LIST,POINTLIST)
     print *, "NML_POINT%LIST = ", NML_POINT%LIST
     print *, "POINTLIST = ", POINTLIST
+    print *, "NOPTS = ", NOPTS
 
     ! full list of point indexes
     IF (TRIM(POINTLIST(1)).EQ.'all') THEN
