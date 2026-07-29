@@ -408,7 +408,7 @@ USE W3NMLOUTPMD
     
     ! 4.2 Output points NOPTS
     CALL STRSPLIT(NML_POINT%LIST,POINTLIST)
-
+    print *, "NML_POINT%LIST = ", NML_POINT%LIST
     print *, "POINTLIST = ", POINTLIST
 
     ! full list of point indexes
