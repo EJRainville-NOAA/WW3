@@ -65,6 +65,13 @@ MODULE W3NMLOUTPMD
     LOGICAL                     :: TOTAL
   END TYPE NML_SOURCE_T
 
+  ! Partition structure
+  TYPE NML_PART_T
+    INTEGER                     :: OTYPE
+    INTEGER                     :: UNIT_NUM_TRANS
+    CHARACTER(15)               :: REF_DATE
+    CHARACTER(4)                :: TIME_ZONE
+  END TYPE NML_PART_T
 
   ! miscellaneous
   CHARACTER(256)                :: MSG
@@ -191,6 +198,10 @@ USE W3ODATMD, ONLY: NDSE
     ! Source Structure - Read and Report
     CALL READ_SOURCE_NML (NDSI, NML_SOURCE)
     CALL REPORT_SOURCE_NML (NML_SOURCE)
+
+    ! Partition Structure - Read and Report
+    CALL READ_PART_NML (NDSI, NML_PART)
+    CALL REPORT_PART_NML (NML_PART)
 
     ! close namelist files
     CLOSE (NDSI)
@@ -624,7 +635,108 @@ END SUBROUTINE W3NMLOUTP
 
   !/ ------------------------------------------------------------------- /
 
+  SUBROUTINE READ_PART_NML (NDSI, NML_PART)
+    !/
+    !/                  +-----------------------------------+
+    !/                  | WAVEWATCH III           NOAA/NCEP |
+    !/                  |           E. Rainville            |
+    !/                  |                                   |
+    !/                  |                        FORTRAN 90 |
+    !/                  | Last update :         14-July-2026|
+    !/                  +-----------------------------------+
+    !/
+    !  1. Purpose :
+    !
+    !
+    !  2. Method :
+    !
+    !     See source term routines.
+    !
+    !  3. Parameters :
+    !
+    !     Parameter list
+    !     ----------------------------------------------------------------
+    !      NDSI         Int.
+    !      NML_PART     Type.
+    !     ----------------------------------------------------------------
+    !
+    !  4. Subroutines used :
+    !
+    !      Name      TYPE  Module   Description
+    !     ----------------------------------------------------------------
+    !      STRACE    Subr. W3SERVMD SUBROUTINE tracing.
+    !     ----------------------------------------------------------------
+    !
+    !  5. Called by :
+    !
+    !      Name      TYPE  Module   Description
+    !     ----------------------------------------------------------------
+    !      W3NMLOUNP Subr.   N/A    Namelist configuration routine.
+    !     ----------------------------------------------------------------
+    !
+    !  6. Error messages :
+    !
+    !     None.
+    !
+    !  7. Remarks :
+    !
+    !  8. Structure :
+    !
+    !     See source code.
+    !
+    !  9. Switches :
+    !
+    ! 10. Source code :
+    !
+    !/ ------------------------------------------------------------------- /
 
+    USE W3ODATMD, ONLY: NDSE
+    USE W3SERVMD, ONLY: EXTCDE
+#ifdef W3_S
+    USE W3SERVMD, ONLY: STRACE
+#endif
+
+    IMPLICIT NONE
+
+    INTEGER, INTENT(IN)                 :: NDSI
+    TYPE(NML_PART_T), INTENT(INOUT)     :: NML_PART
+
+    ! locals
+    INTEGER                                :: IERR
+    TYPE(NML_PART_T) :: PART
+    NAMELIST /PART_NML/ PART
+
+#ifdef W3_S
+    INTEGER, SAVE                       :: IENT = 0
+#endif
+
+    IERR = 0
+#ifdef W3_S
+    CALL STRACE (IENT, 'READ_PART_NML')
+#endif
+
+    ! set default values for source structure
+    PART%OTYPE            = 1
+    PART%UNIT_NUM_TRANS   = 2
+    PART%REF_DATE         = '19680606 060000'
+    PART%TIME_ZONE        = 'UTC'
+
+    ! read source namelist
+    REWIND (NDSI)
+    READ (NDSI, nml=PART_NML, iostat=IERR, iomsg=MSG)
+    IF (IERR.GT.0) THEN
+      WRITE (NDSE,'(A,/A)') &
+           'ERROR: READ_PART_NML: namelist read error', &
+           'ERROR: '//TRIM(MSG)
+      CALL EXTCDE (5)
+    END IF
+
+    ! save namelist
+    NML_PART = PART
+
+  END SUBROUTINE READ_PART_NML
+
+  !/ ------------------------------------------------------------------- /
    !/ ------------------------------------------------------------------- /
 
   SUBROUTINE REPORT_POINT_NML (NML_POINT)
@@ -980,5 +1092,77 @@ END SUBROUTINE W3NMLOUTP
   END SUBROUTINE REPORT_SOURCE_NML
 
   !/ ------------------------------------------------------------------- /
+
+  SUBROUTINE REPORT_PART_NML (NML_PART)
+    !/
+    !/                  +-----------------------------------+
+    !/                  | WAVEWATCH III           NOAA/NCEP |
+    !/                  |           E. Rainville            |
+    !/                  |                        FORTRAN 90 |
+    !/                  | Last update :         14-July-2026|
+    !/                  +-----------------------------------+
+    !/
+    !/
+    !  1. Purpose :
+    !
+    !
+    !  2. Method :
+    !
+    !     See source term routines.
+    !
+    !  3. Parameters :
+    !
+    !     Parameter list
+    !     ----------------------------------------------------------------
+    !      NML_PART  Type.
+    !     ----------------------------------------------------------------
+    !
+    !  4. Subroutines used :
+    !
+    !      Name      TYPE  Module   Description
+    !     ----------------------------------------------------------------
+    !      STRACE    Subr. W3SERVMD SUBROUTINE tracing.
+    !     ----------------------------------------------------------------
+    !
+    !  5. Called by :
+    !
+    !      Name      TYPE  Module   Description
+    !     ----------------------------------------------------------------
+    !      W3NMLOUTP Subr.   N/A    Namelist configuration routine.
+    !     ----------------------------------------------------------------
+    !
+    !  6. Error messages :
+    !
+    !     None.
+    !
+    !  7. Remarks :
+  !/ ------------------------------------------------------------------- /
+#ifdef W3_S
+    USE W3SERVMD, ONLY: STRACE
+#endif
+
+    IMPLICIT NONE
+
+    TYPE(NML_PART_T), INTENT(IN) :: NML_PART
+#ifdef W3_S
+    INTEGER, SAVE                           :: IENT = 0
+#endif
+
+#ifdef W3_S
+    CALL STRACE (IENT, 'REPORT_PART_NML')
+#endif
+
+    WRITE (MSG,'(A)') 'PART % '
+    WRITE (NDSN,'(A)')
+    WRITE (NDSN,11) TRIM(MSG),'OTYPE          = ', NML_PART%OTYPE
+    WRITE (NDSN,14) TRIM(MSG),'UNIT_NUM_TRANS = ', NML_PART%UNIT_NUM_TRANS
+    WRITE (NDSN,14) TRIM(MSG),'REF_DATE       = ', NML_PART%REF_DATE
+    WRITE (NDSN,11) TRIM(MSG),'TIME_ZONE      = ', NML_PART%TIME_ZONE
+  
+11  FORMAT (A,2X,A,I8)
+13  FORMAT (A,2X,A,L1)
+14  FORMAT (A,2X,A,F8.2)
+
+  END SUBROUTINE REPORT_PART_NML
 
 END MODULE W3NMLOUTPMD
