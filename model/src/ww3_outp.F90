@@ -506,6 +506,7 @@ USE W3NMLOUTPMD
 
     ! Extract ITYPE/OTYPE configuration
     ITYPE = NML_POINT%ITYPE
+    print *, "ITYPE = ", ITYPE
     IF (ITYPE .EQ. 0) THEN
         ! No extra parameters needed
     ELSE IF (ITYPE .EQ. 1) THEN
