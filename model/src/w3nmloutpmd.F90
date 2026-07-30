@@ -195,10 +195,7 @@ USE W3ODATMD, ONLY: NDSE
     ! close namelist files
     CLOSE (NDSI)
     CLOSE (NDSN)
-
-    ! Print end of subroutine message
-    print *, "Finished reading the namelist file"
-
+    
 END SUBROUTINE W3NMLOUTP
 
 !/ ------------------------------------------------------------------- /
