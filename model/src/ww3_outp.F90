@@ -389,6 +389,7 @@ USE W3NMLOUTPMD
   INQUIRE(FILE=TRIM(FNMPRE)//"ww3_outp.nml", EXIST=FLGNML)
   
   IF (FLGNML) THEN
+    print *, "In FLGNML loop"
     ! Read namelist entirely
     CALL W3NMLOUTP (NDSI, TRIM(FNMPRE)//'ww3_outp.nml', NML_POINT, &
          NML_SPECTRA, NML_PARAM, NML_SOURCE, IERR)
@@ -400,6 +401,7 @@ USE W3NMLOUTPMD
     dynpnt = NML_POINT%TIMESPLIT
     prefix = NML_POINT%PREFIX
   ELSE
+    print *, "In FLGNML false loop"
     ! Process old ww3_outp.inp if it exists (First two lines only)
     J      = LEN_TRIM(FNMPRE)
     OPEN (NDSI,FILE=FNMPRE(:J)//'ww3_outp.inp',STATUS='OLD', IOSTAT=IERR)
@@ -477,6 +479,7 @@ USE W3NMLOUTPMD
   NREQ = 0
 
   IF (FLGNML) THEN
+    print *, "IN FLGNML true second loop"
     ! 5a. Process NML Points
     CALL STRSPLIT(NML_POINT%LIST,POINTLIST)
 
@@ -529,6 +532,7 @@ USE W3NMLOUTPMD
     END IF
 
   ELSE
+    print *, "IN FLGNML false second loop"
     ! 5b. Process old INP Points
     DO I=1, NOPTS
       CALL NEXTLN ( COMSTR , NDSI , NDSE )
@@ -583,228 +587,7 @@ USE W3NMLOUTPMD
       IF (IERR.NE.0) CALL EXTIOF(NDSE,IERR,'W3OUTP','INPUT',41)
     END IF
   END IF
-  !   ! 3.  Read output requests from input file.
-!   !
-!   ! Allocate variables
-!   ALLOCATE(POINTLIST(NOPTS+1))
-!   POINTLIST(:)=''
-!   ALLOCATE ( FLREQ(NOPTS) )
-!   ALLOCATE ( INDREQTMP(NOPTS) )
-!   FLREQ = .FALSE.
-!   NREQ = 0
-
-!   ! Process ww3_outp.nml if it exists
-!   INQUIRE(FILE=TRIM(FNMPRE)//"ww3_outp.nml", EXIST=FLGNML)
-!   IF (FLGNML) THEN
-!     ! Read namelist
-!     CALL W3NMLOUTP (NDSI, TRIM(FNMPRE)//'ww3_outp.nml', NML_POINT, &
-!          NML_SPECTRA, NML_PARAM, NML_SOURCE, IERR)
-
-!     ! 4.1 Time setup IDTIME, DTREQ, NOUT
-!     READ(NML_POINT%TIMESTRIDE, *)  DTREQ
-!     READ(NML_POINT%TIMECOUNT, *)   NOUT
-!     READ(NML_POINT%TIMESTART, *)   TOUT(1), TOUT(2)
-    
-!     ! 4.2 Output points NOPTS
-!     CALL STRSPLIT(NML_POINT%LIST,POINTLIST)
-!     print *, "NML_POINT%LIST = ", NML_POINT%LIST
-!     print *, "POINTLIST = ", POINTLIST
-!     print *, "NOPTS = ", NOPTS
-
-!     ! full list of point indexes
-!     IF (TRIM(POINTLIST(1)).EQ.'all') THEN
-!       FLREQ = .TRUE.
-!       NREQ = NOPTS
-!       INDREQTMP=(/(J,J=1,NREQ)/)
-!       ! user defined list of point indexes
-!       print *, "Entered the 'all' points if statement"
-!       print *, "NREQ = ", NREQ
-!     ELSE
-!       IP=0
-!       ! Ensure IP doesn't exceedthe allocated size of POINTLIST (NOPTS)
-!       DO WHILE (IP .LT. NOPTS+1)
-!         IP=IP+1
-!         READ(POINTLIST(IP),*,IOSTAT=IERR) IPOINT
-        
-!         ! Skip to next if the read failed
-!         IF (IERR .NE. 0) CYCLE
-        
-!         ! existing index in out_pnt.ww3
-!         IF ((IPOINT .GT. 0) .AND. (IPOINT .LE. NOPTS) .AND.  (NREQ .LT. NOPTS)) THEN
-!           IF ( .NOT. FLREQ(IPOINT) ) THEN
-!             NREQ = NREQ + 1
-!             INDREQTMP(NREQ)=IPOINT
-!           END IF
-!           FLREQ(IPOINT) = .TRUE.
-!         END IF
-!       END DO
-!       print *, "Entered the other points if statement"
-!       print *, "NREQ = ", NREQ
-!     END IF
-
-!     ! 4.3 Output type
-!     ITYPE = NML_POINT%ITYPE
-!     prefix = NML_POINT%PREFIX
-!     dynpnt = NML_POINT%TIMESPLIT
-
-!     ! Get variables for output type, no additonal variables for ITYPE=0
-!     IF (ITYPE .EQ. 0) THEN
-!         ! ITYPE = 0 requires no extra variables.
-!     ELSE IF (ITYPE .EQ. 1) THEN
-!       OTYPE = NML_SPECTRA%OUTPUT
-!       SCALE1 = NML_SPECTRA%SCALE_FAC
-!       SCALE2 = NML_SPECTRA%OUTPUT_FAC
-!       NDSTAB = NML_SPECTRA%UNIT_NUM_TRANS
-!       FLFORM = NML_SPECTRA%FLAG_UNFORMAT_TRANS
-!     ELSE IF (ITYPE .EQ. 2) THEN
-!       OTYPE = NML_PARAM%OUTPUT
-!       NDSTAB = NML_PARAM%UNIT_NUM_TABLE
-!     ELSE IF (ITYPE .EQ. 3) THEN
-!       OTYPE = NML_SOURCE%OUTPUT
-!       SCALE1 = NML_SOURCE%SCALE_FAC
-!       SCALE2 = NML_SOURCE%OUTPUT_FAC
-!       ISCALE = NML_SOURCE%TABLE_FAC
-!       FLSRCE(1) = NML_SOURCE%SPECTRUM
-!       FLSRCE(2) = NML_SOURCE%INPUT
-!       FLSRCE(3) = NML_SOURCE%INTERACTIONS
-!       FLSRCE(4) = NML_SOURCE%DISSIPATION
-!       FLSRCE(5) = NML_SOURCE%BOTTOM
-!       FLSRCE(6) = NML_SOURCE%ICE
-!       FLSRCE(7) = NML_SOURCE%TOTAL
-!     END IF
-!   END IF ! FLGNML
-
-!   ! Process old ww3_outp.inp if it exists
-!   IF (.NOT. FLGNML) THEN
-!     ! If ww3_outp.nml does not exist, process old ww3_outp.inp
-!     J      = LEN_TRIM(FNMPRE)
-!     OPEN (NDSI,FILE=FNMPRE(:J)//'ww3_outp.inp',STATUS='OLD', IOSTAT=IERR)
-!     IF (IERR.NE.0) CALL EXTOPN(NDSE,IERR,'W3OUTP','INPUT',40)
-!     READ (NDSI,'(A)',IOSTAT=IERR) COMSTR
-!     IF (IERR.NE.0) CALL EXTIOF(NDSE,IERR,'W3OUTP','INPUT',41)
-!     IF (COMSTR.EQ.' ') COMSTR = '$'
-!     WRITE (NDSO,901) COMSTR
-!     CALL NEXTLN ( COMSTR , NDSI , NDSE )
-!     WORDS = ''
-!     READ (NDSI, '(A)', IOSTAT=IERR) LINEIN
-!     IF (IERR.NE.0) CALL EXTIOF(NDSE,IERR,'W3OUTP','INPUT',41)
-!     READ(LINEIN,*,IOSTAT=IERR) WORDS
-!     READ(WORDS(1), *, IOSTAT=IERR) TOUT(1)  ! Date (yyyymmdd)
-!     READ(WORDS(2), *, IOSTAT=IERR) TOUT(2)  ! Time (hhmmss)
-!     READ(WORDS(3), *, IOSTAT=IERR) DTREQ
-!     READ(WORDS(4), *, IOSTAT=IERR) NOUT
-!     IF (WORDS(5) /= '') READ(WORDS(5), *, IOSTAT=IERR) dynpnt
-!     IF (WORDS(6) /= '') prefix = TRIM(WORDS(6))
-
-!     ! Output points
-!     DO I=1, NOPTS
-!       ! reads point index
-!       CALL NEXTLN ( COMSTR , NDSI , NDSE )
-!       READ (NDSI,*,IOSTAT=IERR) IPOINT
-!       IF (IERR.NE.0) CALL EXTIOF(NDSE,IERR,'W3OUTP','INPUT',41)
-!       ! last index
-!       IF (IPOINT .LT. 0) THEN
-!         IF (I.EQ.1) THEN
-!           FLREQ = .TRUE.
-!           NREQ = NOPTS
-!           INDREQTMP=(/(J,J=1,NREQ)/)
-!         END IF
-!         EXIT
-!       END IF
-!       ! existing index in out_pnt.ww3
-!       IF ( (IPOINT .GT. 0) .AND. (IPOINT .LE. NOPTS) ) THEN
-!         IF ( .NOT. FLREQ(IPOINT) ) THEN
-!           NREQ = NREQ + 1
-!           INDREQTMP(NREQ)=IPOINT
-!         END IF
-!         FLREQ(IPOINT) = .TRUE.
-!       END IF
-!       ! read the 'end of list' if nopts reached before it
-!       IF ( (IPOINT .GT. 0) .AND. (NREQ .EQ. NOPTS) ) THEN
-!         CALL NEXTLN ( COMSTR , NDSI , NDSE )
-!         READ (NDSI,*,IOSTAT=IERR) IPOINT
-!         IF (IERR.NE.0) CALL EXTIOF(NDSE,IERR,'W3OUTP','INPUT',41)
-!       END IF
-!     END DO
-!     ! check if last point index is -1
-!     IF (IPOINT .NE. -1) THEN
-!       WRITE (NDSE,1007)
-!       CALL EXTCDE ( 47 )
-!     END IF
-    
-!     ! 4.3 Output type 
-!     CALL NEXTLN ( COMSTR , NDSI , NDSE )
-!     READ (NDSI,*,IOSTAT=IERR) ITYPE
-!     IF (IERR.NE.0) CALL EXTIOF(NDSE,IERR,'W3OUTP','INPUT',41)
-    
-!     ! Type 1 Parameters 
-!     CALL NEXTLN ( COMSTR , NDSI , NDSE )
-!     READ (NDSI,*,IOSTAT=IERR) OTYPE, SCALE1, SCALE2,        &
-!          NDSTAB, FLFORM
-!     IF (IERR.NE.0) CALL EXTIOF(NDSE,IERR,'W3OUTP','INPUT',41)
-
-!     ! Type 2 Parameters
-!     CALL NEXTLN ( COMSTR , NDSI , NDSE )
-!     READ (NDSI,*,IOSTAT=IERR) OTYPE, NDSTAB
-!     IF (IERR.NE.0) CALL EXTIOF(NDSE,IERR,'W3OUTP','INPUT',41)
-
-!     ! Type 3 Parameters
-!     CALL NEXTLN ( COMSTR , NDSI , NDSE )
-!     READ (NDSI,*,IOSTAT=IERR) OTYPE, SCALE1, SCALE2,        &
-!          NDSTAB, FLSRCE, ISCALE, FLFORM
-!     IF (IERR.NE.0) CALL EXTIOF(NDSE,IERR,'W3OUTP','INPUT',41)
-
-!     ! Type 4 Parameters
-!     CALL NEXTLN ( COMSTR , NDSI , NDSE )
-!     READ (NDSI,*,IOSTAT=IERR) OTYPE, NDSTAB, TIMEV, HTYPE
-!     IF (IERR.NE.0) CALL EXTIOF(NDSE,IERR,'W3OUTP','INPUT',41)
-
-!   END IF ! .NOT. FLGNML
-  
-!   DTREQ  = MAX ( 0. , DTREQ )
-!   IF ( DTREQ.EQ.0 ) NOUT = 1
-!   NOUT   = MAX ( 1 , NOUT )
-    
-!   prefix = TRIM(ADJUSTL(prefix))
-!   ! Ensure prefix ends with a dot
-!   IF (LEN_TRIM(prefix) > 0) THEN
-!     prefix = TRIM(prefix) // '.'
-!   END IF
-!   !
-
-!   IF (dynpnt == 0) THEN
-! #if W3_BIN2NC
-!     CALL W3IOPON ( 'READ', NDSOP, IOTEST )
-! #else
-!     CALL W3IOPO ( 'READ', NDSOP, IOTEST )
-! #endif
-!     WRITE (NDSO,930)
-!     DO I=1, NOPTS
-!       IF ( FLAGLL ) THEN
-!         WRITE (NDSO,931) PTNME(I), M2KM*PTLOC(1,I), M2KM*PTLOC(2,I)
-!       ELSE
-!         WRITE (NDSO,932) PTNME(I), M2KM*PTLOC(1,I), M2KM*PTLOC(2,I)
-!       END IF
-!     END DO
-!   END IF 
-
-!   IF (dynpnt == 1) THEN
-! #if W3_BIN2NC
-!     CALL W3IOPON ( 'READ', NDSOP, IOTEST, 1, TOUT )
-!     WRITE (NDSO,930)
-!     DO I=1, NOPTS
-!       IF ( FLAGLL ) THEN
-!         WRITE (NDSO,931) PTNME(I), M2KM*PTLOC(1,I), M2KM*PTLOC(2,I)
-!       ELSE
-!         WRITE (NDSO,932) PTNME(I), M2KM*PTLOC(1,I), M2KM*PTLOC(2,I)
-!       END IF
-!     END DO
-! #else
-!     WRITE (NDSE,1013) dynpnt
-!     CALL EXTCDE ( 45 )
-! #endif
-!   END IF
-  !
+ 
   CALL STME21 ( TOUT , IDTIME )
   WRITE (NDSO,940) IDTIME
   !
