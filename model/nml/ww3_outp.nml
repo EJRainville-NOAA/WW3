@@ -183,8 +183,38 @@
      SOURCE%TOTAL         = T             ! [T|F]
 /
 
-
-
+!  ITYPE=4: Spectral partitions and bulletins
+! -------------------------------------------------------------------- !
+! * definitions & defaults:
+!  - Sub-type OTYPE :  1 : Spectral partitions
+!                      2 : Bulletins ASCII format
+!                      3 : Bulletins CSV format
+!                      4 : Bulletins ASCII and CSV formats
+! - Unit number for transfer file, also used in table file name.
+! - Reference date/time in YYYYMMDD HHMMSS format, used for
+!             including in bulletin legend, and computing forecast time
+!             in CSV type output (if the first field is negative, the
+!             reference time becomes the first simulation time slice)
+! - Three-character code indicating time zone (UTC, EST etc)
+! The transfer file contains records with the following contents.
+!
+! - File ID in quotes, number of frequencies, directions and points.
+!   grid name in quotes (for unformatted file C*21,3I,C*30).
+! - Bin frequencies in Hz for all bins.
+! - Bin directions in radians for all bins (Oceanographic conv.).
+!                                                         -+
+! - Time in yyyymmdd hhmmss format                         | loop
+!                                             -+           |
+! - Point name (C*40), lat, lon, d, U10 and    |  loop     | over
+!   direction, current speed and direction     |   over    |
+! - E(f,theta)                                 |  points   | times
+!                                             -+          -+
+&PART_NML
+    PART%OTYPE = 1
+    PART%UNIT_NUM_TRANS = 2
+    PART%REF_DATE = '19680606 060000'
+    PART%TIME_ZONE = 'UTC'
+/
 ! -------------------------------------------------------------------- !
 ! WAVEWATCH III - end of namelist                                      !
 ! -------------------------------------------------------------------- !
