@@ -80,7 +80,7 @@ MODULE W3NMLOUTPMD
 CONTAINS 
   !/ ------------------------------------------------------------------- /
   SUBROUTINE W3NMLOUTP(NDSI, INFILE, NML_POINT,              &
-        NML_SPECTRA, NML_PARAM, NML_SOURCE, IERR) 
+        NML_SPECTRA, NML_PARAM, NML_SOURCE, NML_PART, IERR) 
     !/
     !/                  +-----------------------------------+
     !/                  | WAVEWATCH III           NOAA/NCEP |
@@ -109,6 +109,7 @@ CONTAINS
     !      NML_SPECTRA   type.
     !      NML_PARAM     type.
     !      NML_SOURCE    type.
+    !      NML_PART      type.
     !      IERR          Int.
     !     ----------------------------------------------------------------
     !
@@ -158,6 +159,7 @@ USE W3ODATMD, ONLY: NDSE
     TYPE(NML_SPECTRA_T), INTENT(INOUT)          :: NML_SPECTRA
     TYPE(NML_PARAM_T), INTENT(INOUT)            :: NML_PARAM
     TYPE(NML_SOURCE_T), INTENT(INOUT)           :: NML_SOURCE
+    TYPE(NML_PART_T), INTENT(INOUT)             :: NML_PART
     INTEGER, INTENT(OUT)                        :: IERR
 
     #ifdef W3_S
