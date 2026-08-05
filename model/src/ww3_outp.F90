@@ -390,20 +390,17 @@ USE W3NMLOUTPMD
   INQUIRE(FILE=TRIM(FNMPRE)//"ww3_outp.nml", EXIST=FLGNML)
   
   IF (FLGNML) THEN
-    print *, "In FLGNML loop"
     ! Read namelist entirely
     CALL W3NMLOUTP (NDSI, TRIM(FNMPRE)//'ww3_outp.nml', NML_POINT, &
          NML_SPECTRA, NML_PARAM, NML_SOURCE, NML_PART, IERR)
 
     ! Extract time variables needed for W3IOPO
-    print *, "Past CALL W3NMLOUTP"
     READ(NML_POINT%TIMESTRIDE, *)  DTREQ
     READ(NML_POINT%TIMECOUNT, *)   NOUT
     READ(NML_POINT%TIMESTART, *)   TOUT(1), TOUT(2)
     dynpnt = NML_POINT%TIMESPLIT
     prefix = NML_POINT%PREFIX
   ELSE
-    print *, "In FLGNML false loop"
     ! Process old ww3_outp.inp if it exists (First two lines only)
     J      = LEN_TRIM(FNMPRE)
     OPEN (NDSI,FILE=FNMPRE(:J)//'ww3_outp.inp',STATUS='OLD', IOSTAT=IERR)
@@ -454,7 +451,6 @@ USE W3NMLOUTPMD
   END IF 
 
   IF (dynpnt == 1) THEN
-    print *, "dynpnt = 1, opening binary file for reading"
 #if W3_BIN2NC
     CALL W3IOPON ( 'READ', NDSOP, IOTEST, 1, TOUT )
     WRITE (NDSO,930)
@@ -466,7 +462,6 @@ USE W3NMLOUTPMD
       END IF
     END DO
 #else
-    print *, "dynpnt = 1, but W3_BIN2NC is not defined"
     WRITE (NDSE,1013) dynpnt
     CALL EXTCDE ( 45 )
 #endif
@@ -483,7 +478,6 @@ USE W3NMLOUTPMD
   NREQ = 0
 
   IF (FLGNML) THEN
-    print *, "IN FLGNML true second loop"
     ! 5a. Process NML Points
     CALL STRSPLIT(NML_POINT%LIST,POINTLIST)
 
@@ -510,7 +504,6 @@ USE W3NMLOUTPMD
 
     ! Extract ITYPE/OTYPE configuration
     ITYPE = NML_POINT%ITYPE
-    print *, "ITYPE = ", ITYPE
     IF (ITYPE .EQ. 0) THEN
         ! No extra parameters needed
     ELSE IF (ITYPE .EQ. 1) THEN
@@ -542,7 +535,6 @@ USE W3NMLOUTPMD
     END IF
 
   ELSE
-    print *, "IN FLGNML false second loop"
     ! 5b. Process old INP Points
     DO I=1, NOPTS
       CALL NEXTLN ( COMSTR , NDSI , NDSE )
