@@ -396,6 +396,7 @@ USE W3NMLOUTPMD
          NML_SPECTRA, NML_PARAM, NML_SOURCE, NML_PART, IERR)
 
     ! Extract time variables needed for W3IOPO
+    print *, "Past CALL W3NMLOUTP"
     READ(NML_POINT%TIMESTRIDE, *)  DTREQ
     READ(NML_POINT%TIMECOUNT, *)   NOUT
     READ(NML_POINT%TIMESTART, *)   TOUT(1), TOUT(2)
@@ -453,6 +454,7 @@ USE W3NMLOUTPMD
   END IF 
 
   IF (dynpnt == 1) THEN
+    print *, "dynpnt = 1, opening binary file for reading"
 #if W3_BIN2NC
     CALL W3IOPON ( 'READ', NDSOP, IOTEST, 1, TOUT )
     WRITE (NDSO,930)
@@ -464,6 +466,7 @@ USE W3NMLOUTPMD
       END IF
     END DO
 #else
+    print *, "dynpnt = 1, but W3_BIN2NC is not defined"
     WRITE (NDSE,1013) dynpnt
     CALL EXTCDE ( 45 )
 #endif
