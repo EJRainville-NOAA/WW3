@@ -1405,16 +1405,12 @@ CONTAINS
     END IF
     ! ----------------------------------
 
-    WRITE(*,*) '===================================='
-    WRITE(*,*) 'Opening NetCDF file: ', TRIM(filename)
-    WRITE(*,*) '===================================='
-
     ! Open the netCDF file.
     ncerr = nf90_open(TRIM(filename), NF90_NOWRITE, fh)
     
     ! THIS LINE MUST BE ACTIVE to prevent "Not a valid ID" crashes
     if (nf90_err(ncerr) .ne. 0) return
-    
+
     ! ! Open the netCDF file.
     ! ncerr = nf90_open(filename, NF90_NOWRITE, fh)
     ! if (nf90_err(ncerr) .ne. 0) return
