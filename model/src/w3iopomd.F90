@@ -1402,9 +1402,24 @@ CONTAINS
       END IF
     END IF
 
-    ! Open the netCDF file.
-    ncerr = nf90_open(filename, NF90_NOWRITE, fh)
-    if (nf90_err(ncerr) .ne. 0) return
+    WRITE(*,*)
+    WRITE(*,*) '===================================='
+    WRITE(*,*) 'Opening NetCDF file'
+    WRITE(*,*) 'FNMPRE   = >',TRIM(FNMPRE),'<'
+    WRITE(*,*) 'FILEXT   = >',TRIM(FILEXT),'<'
+    WRITE(*,*) 'filename = >',TRIM(filename),'<'
+
+    INQUIRE(FILE=TRIM(filename), EXIST=FILE_EXISTS)
+
+    WRITE(*,*) 'Exists = ',FILE_EXISTS
+    WRITE(*,*) '===================================='
+
+    ncerr = nf90_open(TRIM(filename), NF90_NOWRITE, fh)
+
+    WRITE(*,*) 'ncerr = ',ncerr
+    ! ! Open the netCDF file.
+    ! ncerr = nf90_open(filename, NF90_NOWRITE, fh)
+    ! if (nf90_err(ncerr) .ne. 0) return
 
     ! Read and check the version:
     ncerr = nf90_inquire_attribute(fh, NF90_GLOBAL, 'title', len = v_title_len) 
