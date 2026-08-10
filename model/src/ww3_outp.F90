@@ -997,6 +997,7 @@ USE W3NMLOUTPMD
     END IF
   END DO
   !
+  print *, "Sucessfully to line 1000 - Got out of the write loop"
   IF ( ITYPE.EQ.3 .AND. OTYPE.EQ.4 ) WRITE (NDSO,952)
   !
   !--- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
