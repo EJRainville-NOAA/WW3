@@ -1090,6 +1090,7 @@ USE W3NMLOUTPMD
   !     bulletin output for compatibility with version 2.22
   !
   IF (ITYPE .EQ. 4 .AND. ( OTYPE .EQ. 2 .OR. OTYPE .EQ. 4 ) ) THEN
+    print *, "Sucessfully to line 1093 - possibel write issues here"
     DO IJ = 1,NOPTS
       IF (FLREQ(IJ)) THEN
         NDSBUL = NDSTAB + (IJ - 1)
