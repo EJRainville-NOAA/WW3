@@ -987,6 +987,7 @@ USE W3NMLOUTPMD
   DO I=1, NOPTS
     IF (FLREQ(I)) THEN
       IF ( FLAGLL ) THEN
+        print *, "Sucessfully to line 990 - possibel write issues here"
         WRITE (NDSO,951) PTNME(I), M2KM*PTLOC(1,I),   &
              M2KM*PTLOC(2,I)
       ELSE
