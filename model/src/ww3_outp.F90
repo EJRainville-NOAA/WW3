@@ -98,6 +98,7 @@ PROGRAM W3OUTP
   !/    21-Jul-2022 : Correct FP0 calc for peak energy in ( version 7.14 )
   !/                  min/max freq band (B. Pouliot, CMC)
   !/    04-Jul-2025 : Remove labelled statements          ( version X.XX )
+  !/    02-Sep-2026 : Added nml input file capabilities   ( version X.XX )
   !/
   !/    Copyright 2009-2014 National Weather Service (NWS),
   !/       National Oceanic and Atmospheric Administration.  All rights
@@ -987,7 +988,6 @@ USE W3NMLOUTPMD
   DO I=1, NOPTS
     IF (FLREQ(I)) THEN
       IF ( FLAGLL ) THEN
-        print *, "Sucessfully to line 990 - possibel write issues here"
         WRITE (NDSO,951) PTNME(I), M2KM*PTLOC(1,I),   &
              M2KM*PTLOC(2,I)
       ELSE
@@ -997,7 +997,6 @@ USE W3NMLOUTPMD
     END IF
   END DO
   !
-  print *, "Sucessfully to line 1000 - Got out of the write loop"
   IF ( ITYPE.EQ.3 .AND. OTYPE.EQ.4 ) WRITE (NDSO,952)
   !
   !--- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1092,7 +1091,6 @@ USE W3NMLOUTPMD
   !     bulletin output for compatibility with version 2.22
   !
   IF (ITYPE .EQ. 4 .AND. ( OTYPE .EQ. 2 .OR. OTYPE .EQ. 4 ) ) THEN
-    print *, "Sucessfully to line 1093 - possibel write issues here"
     DO IJ = 1,NOPTS
       IF (FLREQ(IJ)) THEN
         NDSBUL = NDSTAB + (IJ - 1)

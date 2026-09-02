@@ -1,0 +1,62 @@
+#!/bin/bash
+
+#SBATCH --nodes=1
+#SBATCH --cpus-per-task=40
+#SBATCH -t 04:00:00
+#SBATCH -q batch
+#SBATCH -p orion
+#SBATCH -A marine-cpu
+#SBATCH -J matcmp_orion_intel
+#SBATCH -o matcmp.out
+
+
+# put paths to your fix and dev directories here
+  FIXDIR=/work/noaa/marine/erainville/ww3_bugfix/regtests
+  DEVDIR=/work/noaa/marine/erainville/ww3_inp2nml/regtests
+  OMP_NUM_THREADS=4
+
+  module purge
+  module use /apps/contrib/spack-stack/spack-stack-1.9.2/envs/ue-oneapi-2024.1.0/install/modulefiles/Core
+  module use /apps/contrib/spack-stack/spack-stack-1.9.2/envs/ue-oneapi-2024.1.0/install/modulefiles/intel-oneapi-mpi/2021.13-sqiixt7/gcc/13.3.0
+  module load stack-oneapi/2024.2.1
+  module load stack-intel-oneapi-mpi/2021.13
+  module load cmake/3.27.9
+  module load libpng/1.6.37
+  module load zlib/1.2.13
+  module load jasper/2.0.32
+  module load hdf5/1.14.3
+  module load netcdf-c/4.9.2
+  module load netcdf-fortran/4.6.1
+  module load bacio/2.4.1
+  module load g2/3.5.1
+  module load w3emc/2.10.0
+  module load esmf/8.8.0
+  module load scotch/7.0.4
+  export METIS_PATH=/work/noaa/marine/Ming.Chen/apps/parmetis/parmetis_intel/hercules/parmetis-4.0.3/install
+
+  ulimit -s unlimited
+  ulimit -c 0
+  export KMP_STACKSIZE=2G
+  export FI_OFI_RXM_BUFFER_SIZE=128000
+  export FI_OFI_RXM_RX_SIZE=64000
+  export OMP_NUM_THREADS=$OMP_NUM_THREADS
+
+  echo ' '
+  echo '             **********************************************'
+  echo '           ***  WAVEWATCH III matrix cmp                  ***'
+  echo '             **********************************************'
+  echo ' '
+  echo ' '
+
+
+  cd $DEVDIR
+  ./bin/matrix.comp all $DEVDIR $FIXDIR
+
+  echo ' '
+  echo '     **************************************************************'
+  echo '     *  end of WAVEWATCH III matcmp                               *'
+  echo '     **************************************************************'
+  echo ' '
+
+  echo 'done'
+  exit 0
