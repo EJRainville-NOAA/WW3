@@ -373,7 +373,6 @@ USE W3NMLOUTPMD
   ! 2.  Read model definition file.
   !
   CALL W3IOGR ( 'READ', NDSM )
-  WRITE (NDSO,920) GNAME
   !
   IF ( FLAGLL ) THEN
     M2KM = 1.
@@ -401,6 +400,9 @@ USE W3NMLOUTPMD
     READ(NML_POINT%TIMESTART, *)   TOUT(1), TOUT(2)
     dynpnt = NML_POINT%TIMESPLIT
     prefix = NML_POINT%PREFIX
+    ! Write the comment string to match the input file and keep logs consistent
+    COMSTR = '$'
+    WRITE (NDSO,901) COMSTR
   ELSE
     ! Process old ww3_outp.inp if it exists (First two lines only)
     J      = LEN_TRIM(FNMPRE)
@@ -422,6 +424,9 @@ USE W3NMLOUTPMD
     IF (WORDS(5) /= '') READ(WORDS(5), *, IOSTAT=IERR) dynpnt
     IF (WORDS(6) /= '') prefix = TRIM(WORDS(6))
   END IF
+
+  ! Write the Grid Name to the log file
+  WRITE (NDSO,920) GNAME
 
   DTREQ  = MAX ( 0. , DTREQ )
   IF ( DTREQ.EQ.0 ) NOUT = 1

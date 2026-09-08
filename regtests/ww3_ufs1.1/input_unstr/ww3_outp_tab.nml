@@ -97,7 +97,7 @@
 ! If output for one point is requested, a time series table is made,
 ! otherwise the file contains a separate tables for each output time.
 &PARAM_NML
-    PARAM%OUTPUT = 4
+    PARAM%OUTPUT = 2
     PARAM%UNIT_NUM_TABLE = 66
 /
 
