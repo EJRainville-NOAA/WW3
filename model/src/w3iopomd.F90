@@ -1395,7 +1395,7 @@ CONTAINS
       filename = FNMPRE(:LEN_TRIM(FNMPRE))//'out_pnt.'//FILEXT(:LEN_TRIM(FILEXT))//'.nc'
     END IF
     
-    ! --- BULLETPROOF FALLBACK LOGIC ---
+    ! Check if the file exists
     INQUIRE(FILE=TRIM(filename), EXIST=FILE_EXISTS)
     
     IF (.NOT. FILE_EXISTS) THEN
@@ -1408,7 +1408,7 @@ CONTAINS
     ! Open the netCDF file.
     ncerr = nf90_open(TRIM(filename), NF90_NOWRITE, fh)
     
-    ! THIS LINE MUST BE ACTIVE to prevent "Not a valid ID" crashes
+    ! Check if there is an error to prevent "Not a valid ID" crashes
     if (nf90_err(ncerr) .ne. 0) return
 
     ! ! Open the netCDF file.
@@ -2352,9 +2352,6 @@ CONTAINS
         IF (IERR.NE.0) CALL EXTOPN(NDSE,IERR,'W3IOPO','',20)
 #endif
       ELSE
-        ! OPEN (NDSOP,FILE=FNMPRE_LOCAL(:J)//'out_pnt.'//FILEXT(:I),    &
-        !      form='UNFORMATTED', convert=file_endian,IOSTAT=IERR,STATUS='OLD')
-        ! IF (IERR.NE.0) CALL EXTOPN(NDSE,IERR,'W3IOPO','',20)
         ! Check for grid-specific binary file first
         INQUIRE(FILE=FNMPRE_LOCAL(:J)//'out_pnt.'//FILEXT(:I), EXIST=FILE_EXISTS)
         
