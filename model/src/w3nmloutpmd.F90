@@ -162,13 +162,13 @@ USE W3ODATMD, ONLY: NDSE
     TYPE(NML_PART_T), INTENT(INOUT)             :: NML_PART
     INTEGER, INTENT(OUT)                        :: IERR
 
-    #ifdef W3_S
-      INTEGER, SAVE                             :: IENT = 0
-    #endif
+#ifdef W3_S
+    INTEGER, SAVE                             :: IENT = 0
+#endif
 
-    #ifdef W3_S
-        CALL STRACE (IENT, 'W3NMLOUNP')
-    #endif
+#ifdef W3_S
+    CALL STRACE (IENT, 'W3NMLOUNP')
+#endif
 
     ! open namelist log file
     NDSN = 3
@@ -269,17 +269,17 @@ END SUBROUTINE W3NMLOUTP
     !/ ------------------------------------------------------------------- /
         USE W3ODATMD, ONLY: NDSE
         USE W3SERVMD, ONLY: EXTCDE
-    #ifdef W3_S
-        USE W3SERVMD, ONLY: STRACE
-    #endif
+#ifdef W3_S
+    USE W3SERVMD, ONLY: STRACE
+#endif
 
-    #ifdef W3_S
-        INTEGER, SAVE                           :: IENT = 0
-    #endif
+#ifdef W3_S
+    INTEGER, SAVE                           :: IENT = 0
+#endif
 
-    #ifdef W3_S
-        CALL STRACE (IENT, 'READ_POINT_NML')
-    #endif
+#ifdef W3_S
+    CALL STRACE (IENT, 'READ_POINT_NML')
+#endif
 
     IMPLICIT NONE
 
@@ -794,17 +794,17 @@ END SUBROUTINE W3NMLOUTP
     ! 10. Source code :
     !
     !/ ------------------------------------------------------------------- /
-    #ifdef W3_S
-      USE W3SERVMD, ONLY: STRACE
-    #endif
+#ifdef W3_S
+    USE W3SERVMD, ONLY: STRACE
+#endif
 
-    #ifdef W3_S
-      INTEGER, SAVE                           :: IENT = 0
-    #endif
+#ifdef W3_S
+    INTEGER, SAVE                           :: IENT = 0
+#endif
 
-    #ifdef W3_S
-      CALL STRACE (IENT, 'REPORT_POINT_NML')
-    #endif
+#ifdef W3_S
+    CALL STRACE (IENT, 'REPORT_POINT_NML')
+#endif
 
     IMPLICIT NONE
 
